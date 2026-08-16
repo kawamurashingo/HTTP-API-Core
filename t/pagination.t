@@ -94,7 +94,7 @@ my $api = HTTP::API::Core->new(
             status  => 200,
             reason  => 'OK',
             headers => { 'content-type' => 'application/json' },
-            content => $url =~ /page=2/
+            content => $url =~ /(?:[?&])page=2(?:&|$)/
                 ? '{"items":[3]}'
                 : '{"items":[1,2]}',
         };
