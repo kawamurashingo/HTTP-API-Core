@@ -8,6 +8,7 @@ Revision history for HTTP-API-Core
       through HTTP::API::Client 0.12.
     - Add a written public API compatibility policy for the path to 1.0.
     - Add a public API regression guard covering documented entry points.
+    - Add constructor and request contract regression coverage.
 
 Pre-rename development history
 ------------------------------
