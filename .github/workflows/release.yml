@@ -1,0 +1,100 @@
+name: release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Release version without the v prefix (for example 1.00)
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: '5.40'
+
+      - name: Validate release version
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -eu
+          case "$VERSION" in
+            ''|*[!0-9.]*)
+              echo "version must contain only digits and dots" >&2
+              exit 1
+              ;;
+          esac
+
+          module_version=$(perl -Ilib -MHTTP::API::Core -e 'print $HTTP::API::Core::VERSION')
+          if [ "$module_version" != "$VERSION" ]; then
+            echo "requested version $VERSION does not match module version $module_version" >&2
+            exit 1
+          fi
+
+          if ! grep -Eq "^${VERSION//./\.}[[:space:]]" Changes; then
+            echo "Changes does not contain a release entry for $VERSION" >&2
+            exit 1
+          fi
+
+          tag="v$VERSION"
+          if git rev-parse "$tag" >/dev/null 2>&1; then
+            echo "tag $tag already exists" >&2
+            exit 1
+          fi
+
+      - name: Configure
+        run: perl Makefile.PL
+
+      - name: Run tests
+        run: make test
+
+      - name: Build distribution
+        run: make dist
+
+      - name: Verify distribution archive
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -eu
+          archive="HTTP-API-Core-$VERSION.tar.gz"
+          test -f "$archive"
+          tar -tzf "$archive" | grep -q "HTTP-API-Core-$VERSION/lib/HTTP/API/Core.pm"
+          echo "ARCHIVE=$archive" >> "$GITHUB_ENV"
+
+      - name: Create tag
+        env:
+          VERSION: ${{ inputs.version }}
+        run: |
+          set -eu
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git tag -a "v$VERSION" -m "HTTP::API::Core $VERSION"
+          git push origin "v$VERSION"
+
+      - name: Create GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          gh release create "v$VERSION" "$ARCHIVE" \
+            --title "HTTP::API::Core $VERSION" \
+            --generate-notes
+
+      - name: Upload distribution artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: HTTP-API-Core-${{ inputs.version }}
+          path: ${{ env.ARCHIVE }}
+          if-no-files-found: error
