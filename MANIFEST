@@ -4,6 +4,7 @@ Makefile.PL
 MANIFEST
 README.md
 docs/AUTHENTICATION.md
+docs/COMPATIBILITY.md
 docs/ERRORS.md
 docs/IDEMPOTENCY.md
 docs/MIGRATION_FROM_HTTP_API_CLIENT.md
@@ -23,6 +24,7 @@ t/hooks.t
 t/idempotency.t
 t/observability.t
 t/pagination.t
+t/public-api.t
 t/query.t
 t/rate-limit.t
 t/response.t
