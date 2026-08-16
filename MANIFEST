@@ -40,4 +40,5 @@ t/response.t
 t/retry-contract.t
 t/retry.t
 t/smoke.t
+t/transport-contract.t
 t/transport.t
