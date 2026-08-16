@@ -9,6 +9,7 @@ docs/ERRORS.md
 docs/IDEMPOTENCY.md
 docs/MIGRATION_FROM_HTTP_API_CLIENT.md
 docs/RESPONSE.md
+docs/RETRY.md
 docs/TRANSPORT.md
 lib/HTTP/API/Core.pm
 lib/HTTP/API/Core/Auth.pm
@@ -29,6 +30,7 @@ t/public-api.t
 t/query.t
 t/rate-limit.t
 t/response.t
+t/retry-contract.t
 t/retry.t
 t/smoke.t
 t/transport.t

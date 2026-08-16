@@ -9,6 +9,7 @@ Revision history for HTTP-API-Core
     - Add a written public API compatibility policy for the path to 1.0.
     - Add a public API regression guard covering documented entry points.
     - Add constructor and request contract regression coverage.
+    - Document the retry policy contract and add compatibility-focused retry tests.
 
 Pre-rename development history
 ------------------------------
