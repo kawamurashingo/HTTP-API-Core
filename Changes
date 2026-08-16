@@ -1,0 +1,11 @@
+Revision history for HTTP-API-Core
+
+0.01  2026-08-16
+    - Initial HTTP::API::Core release.
+    - Renamed from the pre-release HTTP::API::Client project after a CPAN namespace conflict.
+    - Carries forward the HTTP::API::Client 0.01-0.12 design and implementation work:
+      JSON request/response handling, structured errors, retry/backoff/jitter,
+      pagination, rate-limit handling, lifecycle hooks, query parameters,
+      authentication helpers, observability, response ergonomics, idempotency,
+      and the transport adapter contract.
+    - Establish HTTP::API::Core as the new CPAN namespace and distribution name.
