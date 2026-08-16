@@ -21,6 +21,7 @@ lib/HTTP/API/Core/Pagination.pm
 lib/HTTP/API/Core/RateLimit.pm
 lib/HTTP/API/Core/Response.pm
 t/00-load.t
+t/auth-contract.t
 t/auth-helpers.t
 t/client.t
 t/contracts.t
