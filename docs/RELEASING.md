@@ -24,14 +24,25 @@ For a major release such as 1.00, also confirm that every interface listed under
 
 The release commit should contain only release-specific changes. Avoid mixing new features or behavioral changes into the version bump.
 
-## Publish
+## Publish with GitHub Actions
 
-1. Merge the release-preparation pull request only after CI is green.
-2. Tag the exact release commit using the version number, for example `v1.00`.
-3. Upload the generated distribution archive to CPAN using the maintainer's normal PAUSE workflow.
-4. Create a GitHub release from the same tag and summarize the corresponding `Changes` entry.
+After the release-preparation pull request is merged and the `main` CI run is green, use the `release` workflow from the GitHub Actions UI.
 
-The CPAN upload, Git tag, and GitHub release must all refer to the same source revision.
+1. Choose **Run workflow** on the `release` workflow from `main`.
+2. Enter the version without the `v` prefix, for example `1.00`.
+3. The workflow verifies that the requested version matches `HTTP::API::Core::$VERSION` and that `Changes` contains the release entry.
+4. It runs the test suite, builds `HTTP-API-Core-VERSION.tar.gz`, and verifies the archive contents.
+5. It creates and pushes the `vVERSION` tag from the exact checked-out `main` revision.
+6. It creates a GitHub Release for that tag and attaches the distribution archive.
+7. The same archive is retained as a workflow artifact.
+
+The workflow refuses to continue if the version does not match or if the tag already exists. This keeps the tag, GitHub Release, and distribution archive tied to one source revision.
+
+## CPAN upload
+
+Upload the distribution archive produced by the release workflow to CPAN using the maintainer's normal PAUSE workflow. CPAN credentials are intentionally not stored in this repository or required by the GitHub release workflow.
+
+After uploading, verify that the CPAN/MetaCPAN release version and archive match the GitHub Release asset.
 
 ## After publishing
 
