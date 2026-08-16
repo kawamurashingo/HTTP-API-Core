@@ -1,28 +1,12 @@
 # HTTP::API::Core compatibility policy
 
-This document defines the compatibility promises for `HTTP::API::Core` as the
-project moves toward 1.0.
-
-## Before 1.0
-
-The 0.x series is still allowed to refine public interfaces, but compatibility
-changes should be deliberate rather than accidental.
-
-- Breaking public API changes must be called out in `Changes`.
-- Existing documented behavior should remain covered by regression tests.
-- Renames should prefer a deprecation path when practical.
-- New behavior should remain transport-independent and avoid changing the
-  semantics of existing requests unless explicitly configured.
-
-The initial `HTTP::API::Core` 0.01 release carries forward the implementation
-and regression coverage developed through the pre-rename
-`HTTP::API::Client` 0.12 series. The namespace rename itself is documented in
-`MIGRATION_FROM_HTTP_API_CLIENT.md`.
+This document defines the compatibility promises for `HTTP::API::Core` starting
+with version 1.00.
 
 ## 1.x compatibility promise
 
-Once 1.0 is released, the following documented interfaces are considered public
-and should remain backward compatible throughout the 1.x series:
+The following documented interfaces are public and should remain backward
+compatible throughout the 1.x series:
 
 - the `HTTP::API::Core` constructor and its documented options
 - `request`, `get`, `post`, `put`, `patch`, and `delete`
@@ -41,6 +25,14 @@ A compatible 1.x release may add constructor options, methods, response fields,
 error metadata, authentication helpers, or other opt-in capabilities. It should
 not remove or rename documented interfaces, change documented return types, or
 silently change default request semantics.
+
+## Pre-1.0 history
+
+The initial `HTTP::API::Core` 0.01 release carried forward the implementation
+and regression coverage developed through the pre-rename
+`HTTP::API::Client` 0.12 series. Before 1.00, public interfaces were allowed to
+be refined deliberately while the compatibility contracts were stabilized.
+The namespace rename itself is documented in `MIGRATION_FROM_HTTP_API_CLIENT.md`.
 
 ## What is not covered
 

@@ -1,5 +1,13 @@
 Revision history for HTTP-API-Core
 
+1.00  2026-08-17
+    - Declare the documented HTTP::API::Core interfaces stable for the 1.x series.
+    - Stabilize constructor/request, response, error, retry, pagination, hooks,
+      rate-limit, authentication, and transport adapter contracts with regression tests.
+    - Add a written 1.x compatibility policy and release-readiness documentation.
+    - Add GitHub Actions coverage across supported Perl versions.
+    - Add CPAN distribution metadata and a repeatable maintainer release checklist.
+
 0.01  2026-08-16
     - Initial HTTP::API::Core release under the new CPAN namespace.
     - Renamed from the pre-release HTTP::API::Client project after a CPAN
