@@ -10,6 +10,7 @@ Revision history for HTTP-API-Core
     - Add a public API regression guard covering documented entry points.
     - Add constructor and request contract regression coverage.
     - Document the retry policy contract and add compatibility-focused retry tests.
+    - Document the pagination contract and add compatibility-focused pagination tests.
 
 Pre-rename development history
 ------------------------------
