@@ -19,6 +19,7 @@ lib/HTTP/API/Core/Response.pm
 t/00-load.t
 t/auth-helpers.t
 t/client.t
+t/contracts.t
 t/error-model.t
 t/hooks.t
 t/idempotency.t
