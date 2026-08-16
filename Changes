@@ -11,6 +11,7 @@ Revision history for HTTP-API-Core
     - Add constructor and request contract regression coverage.
     - Document the retry policy contract and add compatibility-focused retry tests.
     - Document the pagination contract and add compatibility-focused pagination tests.
+    - Document the lifecycle hook contract and add compatibility-focused hook tests.
 
 Pre-rename development history
 ------------------------------
