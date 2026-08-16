@@ -12,6 +12,7 @@ Revision history for HTTP-API-Core
     - Document the retry policy contract and add compatibility-focused retry tests.
     - Document the pagination contract and add compatibility-focused pagination tests.
     - Document the lifecycle hook contract and add compatibility-focused hook tests.
+    - Document the rate-limit contract and add compatibility-focused rate-limit tests.
 
 Pre-rename development history
 ------------------------------
