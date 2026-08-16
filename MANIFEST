@@ -10,6 +10,7 @@ docs/HOOKS.md
 docs/IDEMPOTENCY.md
 docs/MIGRATION_FROM_HTTP_API_CLIENT.md
 docs/PAGINATION.md
+docs/RATE_LIMIT.md
 docs/RESPONSE.md
 docs/RETRY.md
 docs/TRANSPORT.md
@@ -32,6 +33,7 @@ t/pagination-contract.t
 t/pagination.t
 t/public-api.t
 t/query.t
+t/rate-limit-contract.t
 t/rate-limit.t
 t/response.t
 t/retry-contract.t
