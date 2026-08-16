@@ -38,6 +38,7 @@ t/query.t
 t/rate-limit-contract.t
 t/rate-limit.t
 t/release-metadata.t
+t/release-version.t
 t/response.t
 t/retry-contract.t
 t/retry.t
