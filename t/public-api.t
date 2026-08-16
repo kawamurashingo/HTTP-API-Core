@@ -22,13 +22,13 @@ can_ok 'HTTP::API::Core::Response', qw(
 );
 
 can_ok 'HTTP::API::Core::Error', qw(
-    new category message method url status retryable cause response
-    body text json headers header elapsed request_id rate_limit
+    new category message method url status retryable retry_after response
+    body text json headers header elapsed request_id rate_limit as_string
 );
 
 can_ok 'HTTP::API::Core::RateLimit', qw(
-    new limit remaining used resource reset retry_after
-    exhausted wait_seconds
+    new from_headers limit remaining used resource reset reset_epoch
+    retry_after source exhausted wait_seconds as_hash
 );
 
 can_ok 'HTTP::API::Core::Auth', qw(
