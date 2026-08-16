@@ -37,6 +37,7 @@ t/public-api.t
 t/query.t
 t/rate-limit-contract.t
 t/rate-limit.t
+t/release-metadata.t
 t/response.t
 t/retry-contract.t
 t/retry.t
