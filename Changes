@@ -6,6 +6,8 @@ Revision history for HTTP-API-Core
       namespace conflict.
     - Carries forward the implementation and regression coverage developed
       through HTTP::API::Client 0.12.
+    - Add a written public API compatibility policy for the path to 1.0.
+    - Add a public API regression guard covering documented entry points.
 
 Pre-rename development history
 ------------------------------
