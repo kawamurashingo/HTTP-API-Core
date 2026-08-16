@@ -13,6 +13,7 @@ Revision history for HTTP-API-Core
     - Document the pagination contract and add compatibility-focused pagination tests.
     - Document the lifecycle hook contract and add compatibility-focused hook tests.
     - Document the rate-limit contract and add compatibility-focused rate-limit tests.
+    - Document the authentication helper contract and add compatibility-focused auth tests.
 
 Pre-rename development history
 ------------------------------
