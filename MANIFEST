@@ -8,6 +8,7 @@ docs/COMPATIBILITY.md
 docs/ERRORS.md
 docs/IDEMPOTENCY.md
 docs/MIGRATION_FROM_HTTP_API_CLIENT.md
+docs/PAGINATION.md
 docs/RESPONSE.md
 docs/RETRY.md
 docs/TRANSPORT.md
@@ -25,6 +26,7 @@ t/error-model.t
 t/hooks.t
 t/idempotency.t
 t/observability.t
+t/pagination-contract.t
 t/pagination.t
 t/public-api.t
 t/query.t
