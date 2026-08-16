@@ -1,0 +1,14 @@
+Changes
+DESIGN.md
+Makefile.PL
+MANIFEST
+README.md
+docs/MIGRATION_FROM_HTTP_API_CLIENT.md
+lib/HTTP/API/Core.pm
+lib/HTTP/API/Core/Auth.pm
+lib/HTTP/API/Core/Error.pm
+lib/HTTP/API/Core/Pagination.pm
+lib/HTTP/API/Core/RateLimit.pm
+lib/HTTP/API/Core/Response.pm
+t/00-load.t
+t/smoke.t
