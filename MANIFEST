@@ -15,6 +15,7 @@ docs/RELEASING.md
 docs/RESPONSE.md
 docs/RETRY.md
 docs/TRANSPORT.md
+examples/Example/API.pm
 lib/HTTP/API/Core.pm
 lib/HTTP/API/Core/Auth.pm
 lib/HTTP/API/Core/Error.pm
@@ -26,6 +27,7 @@ t/auth-contract.t
 t/auth-helpers.t
 t/client.t
 t/contracts.t
+t/downstream-subclass.t
 t/error-model.t
 t/hooks-contract.t
 t/hooks.t
