@@ -8,6 +8,32 @@ base URLs, JSON handling, query parameters, structured errors, retries,
 pagination, rate limits, lifecycle hooks, authentication helpers, observability,
 idempotency, and a transport adapter contract.
 
+## Why use it?
+
+Use `HTTP::API::Core` when `HTTP::Tiny`, LWP, Mojo::UserAgent, or Furl gives you
+the HTTP transport you want, but your API client still needs the same production
+plumbing: safe retries, pagination, rate-limit handling, structured errors,
+authentication, hooks, and request observability.
+
+It is deliberately not a service-specific SDK or another HTTP stack. Build the
+small resource methods your API needs and keep the repetitive policy in one
+dependency-light layer.
+
+## Real API examples
+
+Three small, tested clients show how the core maps onto APIs with different
+pagination shapes:
+
+- `HTTP::API::Core::Example::GitHub` — page-number pagination over a top-level
+  JSON array, plus GitHub rate-limit metadata
+- `HTTP::API::Core::Example::Slack` — cursor pagination using
+  `response_metadata.next_cursor`
+- `HTTP::API::Core::Example::Cloudflare` — page-number pagination using
+  `result_info.total_pages`
+
+See `docs/REAL_API_EXAMPLES.md`. These examples are integration recipes, not
+official SDKs for those services.
+
 ## Basic usage
 
 ```perl
