@@ -40,7 +40,7 @@ jobs:
         run: perl -V
 
       - name: Install dependencies
-        run: cpanm --notest HTTP::Tiny JSON::PP MIME::Base64 Scalar::Util Time::HiRes
+        run: cpanm --notest HTTP::Tiny JSON::PP MIME::Base64 Scalar::Util Time::HiRes Test::More
 
       - name: Configure
         run: perl Makefile.PL
