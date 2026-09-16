@@ -39,6 +39,9 @@ jobs:
       - name: Show Perl version
         run: perl -V
 
+      - name: Install dependencies
+        run: cpanm --installdeps --notest .
+
       - name: Configure
         run: perl Makefile.PL
 
