@@ -630,4 +630,8 @@ assume a universal header name.
 This library is free software; you may redistribute it and/or modify it under
 the same terms as Perl itself.
 
+=head1 AUTHOR
+
+Shingo Kawamura E<lt>shingo@cpan.orgE<gt>
+
 =cut
