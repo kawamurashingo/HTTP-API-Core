@@ -4,7 +4,7 @@ WriteMakefile(
   NAME             => 'HTTP::API::Core',
   VERSION_FROM     => 'lib/HTTP/API/Core.pm',
   ABSTRACT_FROM    => 'lib/HTTP/API/Core.pm',
-  AUTHOR           => 'SHINGO <SHINGO@cpan.org>',
+  AUTHOR           => 'SHINGO <shingo@cpan.org>',
   LICENSE          => 'perl_5',
   MIN_PERL_VERSION => '5.010',
   PREREQ_PM => {
