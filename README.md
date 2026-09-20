@@ -171,7 +171,7 @@ Extractors may be dotted paths or coderefs. Repeated next URLs or cursors are re
 
 Retries are intentionally conservative. By default, only `GET`, `HEAD`, `PUT`, `DELETE`, and `OPTIONS` are retried.
 
-Retryable failures include transport errors, HTTP `408`, `425`, `429`, `5xx`, and exhausted-quota `403` responses. Delays use exponential backoff with jitter; `Retry-After` takes precedence when available.
+Retryable failures include transport errors, HTTP `408`, `425`, `429`, `5xx`, and exhausted-quota `403` responses. Delays use exponential backoff with jitter; a numeric `Retry-After` value takes precedence when available.
 
 Responses expose normalized rate-limit metadata:
 
