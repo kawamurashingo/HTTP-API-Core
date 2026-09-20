@@ -6,9 +6,9 @@
 [![CPAN Testers](https://img.shields.io/badge/CPAN-Testers-blue.svg)](https://www.cpantesters.org/distro/H/HTTP-API-Core.html)
 [![License](https://img.shields.io/badge/license-Perl%205-blue.svg)](https://dev.perl.org/licenses/)
 
-A small, dependency-light foundation for building production-ready JSON HTTP API clients in Perl.
+**Production-ready API client plumbing for Perl — without replacing your HTTP stack.**
 
-`HTTP::API::Core` handles the repetitive parts that tend to grow around every API request—JSON, query parameters, structured errors, retries, pagination, rate limits, authentication, observability, and idempotency—while letting you keep the HTTP transport you already prefer.
+Retries, pagination, rate limits, authentication, structured errors, JSON handling, observability, and idempotency in one small, dependency-light core.
 
 ```perl
 use HTTP::API::Core;
@@ -20,7 +20,9 @@ my $api = HTTP::API::Core->new(
 my $users = $api->get('/users')->json;
 ```
 
-It does **not** replace `HTTP::Tiny`, LWP, Mojo::UserAgent, Furl, or another HTTP stack. It sits above your transport and keeps common API-client policy in one place.
+Keep using `HTTP::Tiny`, LWP, Mojo::UserAgent, Furl, or your preferred transport. `HTTP::API::Core` sits above it and centralizes the policy that otherwise gets reimplemented in every API client.
+
+**You write the service-specific methods. HTTP::API::Core handles the plumbing.**
 
 ## Is this for me?
 
