@@ -1,5 +1,11 @@
 # HTTP::API::Core
 
+[![CPAN version](https://img.shields.io/cpan/v/HTTP-API-Core.svg)](https://metacpan.org/dist/HTTP-API-Core)
+[![CI](https://github.com/kawamurashingo/HTTP-API-Core/actions/workflows/test.yml/badge.svg)](https://github.com/kawamurashingo/HTTP-API-Core/actions/workflows/test.yml)
+[![Perl](https://img.shields.io/badge/perl-5.10%2B-blue.svg)](https://www.perl.org/)
+[![CPAN Testers](https://img.shields.io/badge/CPAN-Testers-blue.svg)](https://www.cpantesters.org/distro/H/HTTP-API-Core.html)
+[![License](https://img.shields.io/badge/license-Perl%205-blue.svg)](https://dev.perl.org/licenses/)
+
 A small, dependency-light foundation for building production-ready JSON HTTP API clients in Perl.
 
 `HTTP::API::Core` handles the repetitive parts that tend to grow around every API request—JSON, query parameters, structured errors, retries, pagination, rate limits, authentication, observability, and idempotency—while letting you keep the HTTP transport you already prefer.
