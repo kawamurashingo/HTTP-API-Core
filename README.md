@@ -50,14 +50,27 @@ The core handles the policy around that request.
 
 ## Quick start
 
-From a checkout:
+Install the latest release from CPAN:
+
+```console
+cpanm HTTP::API::Core
+```
+
+Or with the CPAN client:
+
+```console
+cpan HTTP::API::Core
+```
+
+For development from a checkout:
 
 ```console
 perl Makefile.PL
 make
 make test
-make install
 ```
+
+See the [distribution on MetaCPAN](https://metacpan.org/dist/HTTP-API-Core) for release information and generated module documentation.
 
 Then create a client:
 
