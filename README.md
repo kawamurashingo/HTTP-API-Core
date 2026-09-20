@@ -241,6 +241,10 @@ Adapters can be coderefs or objects with a `request` method. Transport exception
 
 See [docs/TRANSPORT.md](docs/TRANSPORT.md).
 
+## Detailed reference
+
+For the complete behavioral notes and examples—including hooks, observability, rate-limit semantics, all pagination modes, retry policy, response handling, errors, idempotency, and transport adapters—see [docs/REFERENCE.md](docs/REFERENCE.md).
+
 ## Response API
 
 Response handling is explicit and predictable:
