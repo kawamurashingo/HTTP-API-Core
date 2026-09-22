@@ -1,6 +1,6 @@
 Revision history for HTTP-API-Core
 
-1.02  Not Released
+1.02  2026-09-22
     - Support HTTP-date values in Retry-After in addition to delay-seconds.
     - Fall back to rate-limit reset metadata or exponential backoff for malformed Retry-After values.
 
