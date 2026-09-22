@@ -13,6 +13,7 @@ WriteMakefile(
     'MIME::Base64'  => 0,
     'Scalar::Util'  => 0,
     'Time::HiRes'   => 0,
+    'Time::Local'    => 0,
   },
   META_MERGE => {
     'meta-spec' => { version => 2 },
