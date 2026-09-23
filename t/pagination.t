@@ -136,4 +136,31 @@ is_deeply(
     'client joins paginated URLs against base URL',
 );
 
+my $query_validation_client = T::Client->new({
+    '/users?page=1&tag=admin&tag=staff' => { items => [] },
+});
+my $query_validation = HTTP::API::Core::Pagination->new(
+    client => $query_validation_client,
+    path   => '/users',
+    mode   => 'page',
+    items  => 'items',
+    query  => { tag => ['admin', undef, 'staff'], skip => undef },
+);
+is_deeply(scalar($query_validation->all), [], 'pagination omits undefined query values');
+is_deeply(
+    $query_validation_client->{calls},
+    ['/users?page=1&tag=admin&tag=staff'],
+    'pagination omits undefined array entries while preserving repeated keys',
+);
+
+my $bad_query = HTTP::API::Core::Pagination->new(
+    client => T::Client->new({}),
+    path   => '/users',
+    mode   => 'page',
+    query  => { nested => { x => 1 } },
+);
+my $query_error;
+eval { $bad_query->next; 1 } or $query_error = $@;
+like $query_error, qr/query values must be scalars/, 'pagination rejects nested query references';
+
 done_testing;
