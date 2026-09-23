@@ -22,7 +22,7 @@ Values are percent-encoded. Array references generate repeated keys, undefined v
 
 ## Request headers
 
-Per-request `headers` must be a hash reference. They are merged over client-level default headers before idempotency handling and lifecycle hooks run. Invalid request header containers are rejected with a descriptive validation error rather than being passed to the transport.
+Per-request `headers` must be a hash reference. They are merged over client-level default headers before idempotency handling and lifecycle hooks run. Invalid request header containers are rejected with a descriptive validation error rather than being passed to the transport. When `json` is used, `Content-Type` and `Accept` default to `application/json` only when no case-insensitive equivalent header is already present, so explicit client or request headers take precedence.
 
 
 ## Authentication
