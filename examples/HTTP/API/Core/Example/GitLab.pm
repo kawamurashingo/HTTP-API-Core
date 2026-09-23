@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use HTTP::API::Core;
-use HTTP::API::Core::Auth qw(api_key_header);
+use HTTP::API::Core::Auth qw(api_key_auth);
 
 sub new {
     my ($class, %args) = @_;
@@ -13,7 +13,7 @@ sub new {
 
     my $api = HTTP::API::Core->new(
         base_url => delete($args{base_url}) || 'https://gitlab.com/api/v4',
-        hooks => { before_request => api_key_header('PRIVATE-TOKEN', $token) },
+        hooks => { before_request => api_key_auth(name => 'PRIVATE-TOKEN', value => $token, in => 'header') },
         %args,
     );
     return bless { api => $api }, $class;
