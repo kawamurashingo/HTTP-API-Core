@@ -127,8 +127,8 @@ sub request {
                 message  => "failed to encode JSON request: $@",
             );
         }
-        $headers{'content-type'} ||= 'application/json';
-        $headers{'accept'}       ||= 'application/json';
+        _set_header_if_absent(\%headers, 'content-type', 'application/json');
+        _set_header_if_absent(\%headers, 'accept', 'application/json');
     }
     elsif (exists $opts{content}) {
         $content = delete $opts{content};
@@ -509,6 +509,13 @@ sub _uri_escape {
     utf8::encode($bytes) if utf8::is_utf8($bytes);
     $bytes =~ s/([^A-Za-z0-9\-._~])/sprintf('%%%02X', ord($1))/ge;
     return $bytes;
+}
+
+sub _set_header_if_absent {
+    my ($headers, $name, $value) = @_;
+    my $wanted = lc $name;
+    return if grep { lc($_) eq $wanted } keys %$headers;
+    $headers->{$name} = $value;
 }
 
 sub _non_negative_number {
