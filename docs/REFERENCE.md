@@ -16,7 +16,7 @@ my $response = $api->get('/users',
 );
 ```
 
-Values are percent-encoded. Array references generate repeated keys, undefined values are omitted, existing query strings are preserved, and parameters are inserted before URL fragments.
+Values are percent-encoded. Values may be scalars, array references containing only scalars or `undef`, or `undef`. Array references generate repeated keys, undefined values are omitted, existing query strings are preserved, and parameters are inserted before URL fragments.
 
 `before_request` hooks see the final encoded URL.
 
