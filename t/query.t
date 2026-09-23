@@ -36,6 +36,11 @@ is $seen[-1], 'https://api.example.test/unicode?q=%E6%9D%B1%E4%BA%AC', 'UTF-8 en
 $api->get('/empty', query => {});
 is $seen[-1], 'https://api.example.test/empty', 'empty query leaves URL unchanged';
 
+my $header_error;
+eval { $api->get('/bad-headers', headers => []) };
+$header_error = $@;
+like $header_error, qr/headers must be a hash reference/, 'request headers must be hashref';
+
 my $error;
 eval { $api->get('/bad', query => []) };
 $error = $@;
