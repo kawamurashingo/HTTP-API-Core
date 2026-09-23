@@ -14,7 +14,7 @@ subtest github => sub {
         transport => sub {
             my ($method, $url, $opts) = @_;
             push @calls, [$method, $url, $opts];
-            my $second = $url =~ /page=2(?:&|$)/;
+            my $second = $url =~ /(?:[?&])page=2(?:&|$)/;
             my $content = $second
                 ? '[{"full_name":"example/three"}]'
                 : '[{"full_name":"example/one"},{"full_name":"example/two"}]';
