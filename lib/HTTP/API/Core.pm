@@ -12,7 +12,7 @@ use HTTP::API::Core::Response;
 use HTTP::API::Core::Error;
 use HTTP::API::Core::Pagination;
 
-our $VERSION = '1.02';
+our $VERSION = '1.03';
 
 sub new {
     my ($class, %args) = @_;
