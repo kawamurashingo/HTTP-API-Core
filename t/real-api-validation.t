@@ -1,6 +1,7 @@
 use strict;
 use warnings;
 use Test::More;
+use utf8;
 
 use lib 'examples';
 use HTTP::API::Core::Example::Stripe;
@@ -45,6 +46,10 @@ subtest stripe => sub {
         'uses Stripe form encoding';
     like $calls[2][2]{content}, qr/email=a%2Bb%5C%40example\.test/,
         'form body is encoded by the service-specific recipe';
+
+    $client->create_customer(name => "é😀");
+    like $calls[3][2]{content}, qr/name=%C3%A9%F0%9F%98%80/,
+        'form body percent-encodes UTF-8 bytes for non-ASCII text';
 };
 
 subtest gitlab => sub {
