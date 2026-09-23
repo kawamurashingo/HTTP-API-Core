@@ -13,7 +13,11 @@ sub form_urlencode {
     return join '&', map {
         my $key = $_;
         my $value = $params->{$key};
+        die "form parameter values must be scalars, array references, or undef\n"
+            if ref($value) && ref($value) ne 'ARRAY';
         my @values = ref($value) eq 'ARRAY' ? @$value : ($value);
+        die "form parameter array values must contain only scalars or undef\n"
+            if grep { defined($_) && ref($_) } @values;
         map { _escape($key) . '=' . _escape($_) } @values;
     } sort keys %$params;
 }
