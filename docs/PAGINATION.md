@@ -47,6 +47,8 @@ After the first page, continuation URLs are requested as returned by the API. Re
 
 An undefined or empty continuation marks the pagination sequence complete.
 
+Absolute continuation URLs are restricted to the client's configured origin by default. This prevents client-level credentials and other default headers from being forwarded to an unrelated origin when a continuation URL comes from a response. Set `allow_cross_origin => 1` only when the API intentionally paginates across origins and forwarding the client's request configuration is expected.
+
 ### `page`
 
 Page-number mode adds a page parameter to each request.
