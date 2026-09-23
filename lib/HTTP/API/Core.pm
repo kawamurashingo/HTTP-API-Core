@@ -23,6 +23,7 @@ sub new {
 
     my $headers = delete($args{headers}) || {};
     die "headers must be a hash reference\n" if ref($headers) ne 'HASH';
+    _validate_header_values($headers);
 
     my $timeout = exists $args{timeout} ? delete($args{timeout}) : 10;
     die "timeout must be a positive number\n"
@@ -92,6 +93,7 @@ sub request {
 
     my $request_headers = exists $opts{headers} ? delete($opts{headers}) : {};
     die "headers must be a hash reference\n" if ref($request_headers) ne 'HASH';
+    _validate_header_values($request_headers);
     my %headers = %{ $self->{headers} };
     for my $name (keys %$request_headers) {
         my $wanted = lc $name;
@@ -517,6 +519,12 @@ sub _uri_escape {
     utf8::encode($bytes) if utf8::is_utf8($bytes);
     $bytes =~ s/([^A-Za-z0-9\-._~])/sprintf('%%%02X', ord($1))/ge;
     return $bytes;
+}
+
+sub _validate_header_values {
+    my ($headers) = @_;
+    die "header values must be scalars or undef\n"
+        if grep { defined($_) && ref($_) } values %$headers;
 }
 
 sub _set_header_if_absent {
