@@ -41,6 +41,10 @@ eval { $api->get('/bad-headers', headers => []) };
 $header_error = $@;
 like $header_error, qr/headers must be a hash reference/, 'request headers must be hashref';
 
+eval { $api->get('/bad-header-value', headers => { 'X-Test' => [] }) };
+$header_error = $@;
+like $header_error, qr/header values must be scalars or undef/, 'request header reference values are rejected';
+
 my $error;
 eval { $api->get('/bad', query => []) };
 $error = $@;
