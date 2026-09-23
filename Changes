@@ -1,5 +1,12 @@
 Revision history for HTTP-API-Core
 
+1.07  2026-09-23
+    - Include the query API-key fragment regression test in packaged releases.
+    - Recognize percent-encoded existing query API-key names without adding duplicate credentials.
+    - Make per-request header overrides case-insensitive.
+    - Validate request header values, including headers mutated by before_request hooks.
+    - Reject reference values inside array-valued request and pagination query parameters.
+
 1.06  2026-09-23
     - Reject unsupported nested reference values in form_urlencode instead of stringifying them.
     - Validate transport response headers before response normalization.
