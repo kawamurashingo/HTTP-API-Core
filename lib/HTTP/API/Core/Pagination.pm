@@ -24,6 +24,7 @@ sub new {
         next            => exists($args{next}) ? delete($args{next}) : ($mode eq 'cursor' ? 'next_cursor' : 'next'),
         has_more        => delete($args{has_more}),
         response_aware_extractors => delete($args{response_aware_extractors}) ? 1 : 0,
+        allow_cross_origin => delete($args{allow_cross_origin}) ? 1 : 0,
         page_param      => delete($args{page_param}) || 'page',
         page_size_param => delete($args{page_size_param}) || 'per_page',
         page_size       => delete($args{page_size}),
@@ -86,6 +87,7 @@ sub _fetch_page {
             $self->{finished} = 1;
         }
         else {
+            $self->_guard_next_url_origin($next);
             $self->_guard_continuation("url:$next");
             $self->{path} = $next;
         }
@@ -137,6 +139,21 @@ sub _request_url {
     }
 
     return _append_query($self->{path}, \%query);
+}
+
+sub _guard_next_url_origin {
+    my ($self, $next) = @_;
+    return if $self->{allow_cross_origin};
+    return if $next !~ m{\Ahttps?://}i;
+
+    my $base = $self->{client}->base_url;
+    return if !defined($base) || $base !~ m{\A(https?)://([^/]+)}i;
+    my ($base_scheme, $base_authority) = (lc($1), lc($2));
+
+    $next =~ m{\A(https?)://([^/]+)}i;
+    my ($next_scheme, $next_authority) = (lc($1), lc($2));
+    die "cross-origin pagination continuation rejected: $next\n"
+        if $base_scheme ne $next_scheme || $base_authority ne $next_authority;
 }
 
 sub _guard_continuation {
