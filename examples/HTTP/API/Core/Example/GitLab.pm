@@ -25,7 +25,7 @@ sub projects_pager {
     return $self->{api}->paginate(
         '/projects',
         mode => 'page',
-        items => sub { $_[0] },
+        items => sub { return $_[0] },
         page_param => 'page',
         page_size_param => 'per_page',
         page_size => $per_page,
