@@ -157,4 +157,24 @@ my $preserved;
 eval { $preserving->get('/preserved'); 1 } or $preserved = $@;
 is $preserved, $original, 'existing HTTP::API::Core::Error is preserved';
 
+my $bad_hook_transport_called = 0;
+my $bad_hook_api = HTTP::API::Core->new(
+    base_url => 'https://api.example.test',
+    hooks => {
+        before_request => sub {
+            $_[0]{headers}{'X-Bad'} = [];
+        },
+    },
+    transport => sub {
+        $bad_hook_transport_called++;
+        return { status => 200, headers => {}, content => '{}' };
+    },
+);
+my $bad_hook_error;
+eval { $bad_hook_api->get('/bad-header'); 1 } or $bad_hook_error = $@;
+like $bad_hook_error, qr/header values must be scalars or undef/,
+    'reference-valued header added by before_request is rejected';
+is $bad_hook_transport_called, 0,
+    'invalid hook-mutated headers are rejected before transport';
+
 done_testing;
