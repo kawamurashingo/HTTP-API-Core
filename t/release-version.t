@@ -4,6 +4,6 @@ use Test::More;
 
 use HTTP::API::Core;
 
-is $HTTP::API::Core::VERSION, '1.05', 'distribution version is 1.05';
+is $HTTP::API::Core::VERSION, '1.06', 'distribution version is 1.06';
 
 done_testing;
