@@ -1,5 +1,11 @@
 Revision history for HTTP-API-Core
 
+1.04  2026-09-23
+    - Document and protect the form_urlencode helper as part of the public 1.x API.
+    - Preserve URL fragments when pagination appends query parameters.
+    - Validate transport response status values before response normalization.
+    - Validate per-request headers before merging them with client defaults.
+
 1.03  2026-09-23
     - Add interoperability examples for HTTP::Tiny, LWP::UserAgent, Mojo::UserAgent, and Furl.
     - Add real-world API validation recipes for Stripe and GitLab.
