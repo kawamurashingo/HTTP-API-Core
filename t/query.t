@@ -54,6 +54,11 @@ eval { $api->get('/bad', query => { nested => { x => 1 } }) };
 $error = $@;
 like $error, qr/query values must be scalars/, 'nested query values rejected';
 
+eval { $api->get('/bad', query => { tag => ['ok', {}] }) };
+$error = $@;
+like $error, qr/query parameter array values must contain only scalars or undef/,
+    'nested references inside request query arrays are rejected';
+
 my $hook_url;
 my $hook_api = HTTP::API::Core->new(
     base_url => 'https://api.example.test',
