@@ -1,5 +1,10 @@
 Revision history for HTTP-API-Core
 
+1.06  2026-09-23
+    - Reject unsupported nested reference values in form_urlencode instead of stringifying them.
+    - Validate transport response headers before response normalization.
+    - Validate transport response reason and content as scalar fields.
+
 1.05  2026-09-23
     - Preserve URL fragments when query API-key authentication appends credentials.
     - Align pagination query validation and encoding with direct request queries.
