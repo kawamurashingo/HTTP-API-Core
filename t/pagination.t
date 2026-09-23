@@ -163,4 +163,14 @@ my $query_error;
 eval { $bad_query->next; 1 } or $query_error = $@;
 like $query_error, qr/query values must be scalars/, 'pagination rejects nested query references';
 
+my $bad_array_query = HTTP::API::Core::Pagination->new(
+    client => T::Client->new({}),
+    path   => '/users',
+    mode   => 'page',
+    query  => { tag => ['ok', {}] },
+);
+eval { $bad_array_query->next; 1 } or $query_error = $@;
+like $query_error, qr/query parameter array values must contain only scalars or undef/,
+    'pagination rejects references inside query arrays';
+
 done_testing;
