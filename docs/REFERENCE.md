@@ -81,7 +81,7 @@ my $api = HTTP::API::Core->new(
 );
 ```
 
-`before_request` receives a mutable context containing `method`, `url`, `headers`, `content`, and the current retry `attempt`. It runs immediately before each transport attempt.
+`before_request` receives a mutable context containing `method`, `url`, `headers`, `content`, and the current retry `attempt`. It runs immediately before each transport attempt. Hook-mutated `headers` must remain a hash reference whose defined values are scalars; invalid final headers are rejected before the transport is called.
 
 `after_response` runs after a successful response. `on_error` runs before retry handling decides whether another attempt should be made.
 
