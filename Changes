@@ -1,5 +1,12 @@
 Revision history for HTTP-API-Core
 
+1.08  2026-09-23
+    - Add opt-in response-aware pagination extractors for continuation metadata in response headers.
+    - Update the GitHub example to follow Link-header rel=next continuation URLs.
+    - Reject cross-origin absolute pagination continuations by default, with an explicit opt-in.
+    - Revalidate mutable before_request method, URL, headers, and content before transport.
+    - Refresh real API validation guidance from the 1.08 cross-service review.
+
 1.07  2026-09-23
     - Include the query API-key fragment regression test in packaged releases.
     - Recognize percent-encoded existing query API-key names without adding duplicate credentials.
