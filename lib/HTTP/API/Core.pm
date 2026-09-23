@@ -251,7 +251,13 @@ sub _request_once {
         ), $elapsed);
     };
 
-    if (ref($raw) ne 'HASH' || !exists $raw->{status}) {
+    if (ref($raw) ne 'HASH'
+        || !exists($raw->{status})
+        || !defined($raw->{status})
+        || ref($raw->{status})
+        || $raw->{status} !~ /\A\d{3}\z/
+        || $raw->{status} < 100
+        || $raw->{status} > 599) {
         my $elapsed = time - $started_at;
         return (undef, HTTP::API::Core::Error->new(
             category  => 'transport',
