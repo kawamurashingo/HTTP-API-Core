@@ -23,6 +23,7 @@ sub new {
         items           => $items,
         next            => exists($args{next}) ? delete($args{next}) : ($mode eq 'cursor' ? 'next_cursor' : 'next'),
         has_more        => delete($args{has_more}),
+        response_aware_extractors => delete($args{response_aware_extractors}) ? 1 : 0,
         page_param      => delete($args{page_param}) || 'page',
         page_size_param => delete($args{page_size_param}) || 'per_page',
         page_size       => delete($args{page_size}),
@@ -73,14 +74,14 @@ sub _fetch_page {
     my $url = $self->_request_url;
     my $response = $self->{client}->get($url, %{ $self->{request} });
     my $data = $response->json;
-    my $items = _extract($data, $self->{items});
+    my $items = _extract($data, $self->{items}, $response, $self->{response_aware_extractors});
 
     die "pagination items extractor must return an array reference\n" if ref($items) ne 'ARRAY';
     $self->{buffer} = [ @$items ];
     $self->{started} = 1;
 
     if ($self->{mode} eq 'next_url') {
-        my $next = _extract($data, $self->{next});
+        my $next = _extract($data, $self->{next}, $response, $self->{response_aware_extractors});
         if (!defined($next) || $next eq '') {
             $self->{finished} = 1;
         }
@@ -90,7 +91,7 @@ sub _fetch_page {
         }
     }
     elsif ($self->{mode} eq 'cursor') {
-        my $next = _extract($data, $self->{next});
+        my $next = _extract($data, $self->{next}, $response, $self->{response_aware_extractors});
         if (!defined($next) || $next eq '') {
             $self->{finished} = 1;
         }
@@ -102,7 +103,7 @@ sub _fetch_page {
     else {
         my $has_more;
         if (defined $self->{has_more}) {
-            $has_more = _extract($data, $self->{has_more}) ? 1 : 0;
+            $has_more = _extract($data, $self->{has_more}, $response, $self->{response_aware_extractors}) ? 1 : 0;
         }
         elsif (defined $self->{page_size}) {
             $has_more = @$items >= $self->{page_size} ? 1 : 0;
@@ -144,8 +145,9 @@ sub _guard_continuation {
 }
 
 sub _extract {
-    my ($data, $extractor) = @_;
-    return $extractor->($data) if ref($extractor) eq 'CODE';
+    my ($data, $extractor, $response, $response_aware) = @_;
+    return $response_aware ? $extractor->($data, $response) : $extractor->($data)
+        if ref($extractor) eq 'CODE';
     return $data if !defined($extractor) || $extractor eq '';
 
     my $value = $data;
