@@ -199,6 +199,7 @@ my $header_pager = HTTP::API::Core::Pagination->new(
     client => $header_client,
     path   => '/headers',
     mode   => 'next_url',
+    response_aware_extractors => 1,
     items  => 'items',
     next   => sub {
         my ($data, $response) = @_;
@@ -209,5 +210,17 @@ my $header_pager = HTTP::API::Core::Pagination->new(
 );
 is_deeply(scalar($header_pager->all), [1, 2],
     'pagination extractor can inspect response headers');
+
+my $fixed_arity_calls = 0;
+my $fixed_arity = HTTP::API::Core::Pagination->new(
+    client => T::Client->new({ '/fixed' => { items => [] } }),
+    path   => '/fixed',
+    mode   => 'next_url',
+    items  => sub { $fixed_arity_calls++; return $_[0]{items} },
+    next   => sub { return undef },
+);
+is_deeply(scalar($fixed_arity->all), [],
+    'existing one-argument-style extractors remain compatible by default');
+is $fixed_arity_calls, 1, 'default extractor is invoked once';
 
 done_testing;
