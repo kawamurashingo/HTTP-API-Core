@@ -168,8 +168,20 @@ sub _append_query {
     my ($url, $query) = @_;
     my @pairs;
     for my $key (sort keys %$query) {
-        next if !defined $query->{$key};
-        my @values = ref($query->{$key}) eq 'ARRAY' ? @{ $query->{$key} } : ($query->{$key});
+        my $value = $query->{$key};
+        next if !defined $value;
+
+        my @values;
+        if (ref($value) eq 'ARRAY') {
+            @values = grep { defined $_ } @$value;
+        }
+        elsif (ref($value)) {
+            die "query values must be scalars, array references, or undef\n";
+        }
+        else {
+            @values = ($value);
+        }
+
         push @pairs, map { _escape($key) . '=' . _escape($_) } @values;
     }
     return $url if !@pairs;
