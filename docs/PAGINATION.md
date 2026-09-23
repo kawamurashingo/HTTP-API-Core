@@ -124,7 +124,7 @@ query => {
 }
 ```
 
-Pagination-generated page or cursor parameters are merged with these values. Values are URI-escaped, and keys are emitted deterministically.
+Pagination-generated page or cursor parameters are merged with these values. Values are URI-escaped, and keys are emitted deterministically. Existing query strings are preserved, and generated parameters are inserted before URL fragments.
 
 ## Request options
 

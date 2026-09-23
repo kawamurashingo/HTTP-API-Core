@@ -73,6 +73,27 @@ is_deeply(
     'cursor and query parameters encoded',
 );
 
+my $fragment_client = T::Client->new({
+    '/users?filter=active&page=1&per_page=2#results' => { items => [qw(a b)] },
+    '/users?filter=active&page=2&per_page=2#results' => { items => ['c'] },
+});
+my $fragment_page = HTTP::API::Core::Pagination->new(
+    client    => $fragment_client,
+    path      => '/users?filter=active#results',
+    mode      => 'page',
+    items     => 'items',
+    page_size => 2,
+);
+is_deeply(scalar($fragment_page->all), [qw(a b c)], 'page pagination preserves URL fragment');
+is_deeply(
+    $fragment_client->{calls},
+    [
+        '/users?filter=active&page=1&per_page=2#results',
+        '/users?filter=active&page=2&per_page=2#results',
+    ],
+    'pagination parameters are inserted before fragment',
+);
+
 my $repeat_client = T::Client->new({
     '/x' => { items => [1], next => '/x' },
 });

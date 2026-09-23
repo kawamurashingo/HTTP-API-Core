@@ -173,8 +173,14 @@ sub _append_query {
         push @pairs, map { _escape($key) . '=' . _escape($_) } @values;
     }
     return $url if !@pairs;
+
+    my $fragment = '';
+    if ($url =~ s/(#.*)\z//) {
+        $fragment = $1;
+    }
+
     my $sep = index($url, '?') >= 0 ? '&' : '?';
-    return $url . $sep . join('&', @pairs);
+    return $url . $sep . join('&', @pairs) . $fragment;
 }
 
 sub _escape {
