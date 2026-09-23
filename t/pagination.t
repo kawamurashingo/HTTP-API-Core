@@ -173,4 +173,41 @@ eval { $bad_array_query->next; 1 } or $query_error = $@;
 like $query_error, qr/query parameter array values must contain only scalars or undef/,
     'pagination rejects references inside query arrays';
 
+my $response_aware_client = T::Client->new({
+    '/headers' => { items => [1] },
+});
+{
+    package T::HeaderResponse;
+    sub new { bless { data => $_[1], headers => $_[2] }, $_[0] }
+    sub json { $_[0]{data} }
+    sub header { $_[0]{headers}{lc $_[1]} }
+}
+{
+    package T::HeaderClient;
+    sub new { bless { calls => [] }, $_[0] }
+    sub get {
+        my ($self, $url) = @_;
+        push @{ $self->{calls} }, $url;
+        return T::HeaderResponse->new(
+            { items => $url =~ /page=2/ ? [2] : [1] },
+            { link => $url =~ /page=2/ ? '' : '</headers?page=2>; rel="next"' },
+        );
+    }
+}
+my $header_client = T::HeaderClient->new;
+my $header_pager = HTTP::API::Core::Pagination->new(
+    client => $header_client,
+    path   => '/headers',
+    mode   => 'next_url',
+    items  => 'items',
+    next   => sub {
+        my ($data, $response) = @_;
+        my $link = $response->header('link') || '';
+        return $1 if $link =~ /<([^>]+)>;\\s*rel="next"/;
+        return undef;
+    },
+);
+is_deeply(scalar($header_pager->all), [1, 2],
+    'pagination extractor can inspect response headers');
+
 done_testing;
