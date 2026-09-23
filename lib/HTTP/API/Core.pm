@@ -172,6 +172,9 @@ sub request {
 
         my $hook_error = _run_hooks($hooks->{before_request}, $context);
         die _hook_error($hook_error, $method, $url) if $hook_error;
+        die "headers must be a hash reference\n"
+            if ref($context->{headers}) ne 'HASH';
+        _validate_header_values($context->{headers});
 
         my $started_at = time;
         $context->{started_at} = $started_at;
