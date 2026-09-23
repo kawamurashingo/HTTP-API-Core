@@ -26,7 +26,8 @@ sub projects_pager {
         mode => 'page',
         items => sub { $_[0] },
         page_param => 'page',
-        per_page_param => 'per_page',
+        page_size_param => 'per_page',
+        page_size => delete($query{per_page}),
         query => \%query,
     );
 }
