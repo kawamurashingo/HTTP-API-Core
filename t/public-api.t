@@ -38,6 +38,12 @@ can_ok 'HTTP::API::Core::Auth', qw(
 
 can_ok 'HTTP::API::Core::Form', qw(form_urlencode);
 
+{
+    package HTTPAPICoreFormImportTest;
+    HTTP::API::Core::Form->import('form_urlencode');
+}
+can_ok 'HTTPAPICoreFormImportTest', qw(form_urlencode);
+
 my $api = HTTP::API::Core->new(
     base_url => 'https://api.example.test/',
     timeout  => 3,
