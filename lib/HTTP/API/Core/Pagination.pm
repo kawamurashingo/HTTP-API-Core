@@ -73,14 +73,14 @@ sub _fetch_page {
     my $url = $self->_request_url;
     my $response = $self->{client}->get($url, %{ $self->{request} });
     my $data = $response->json;
-    my $items = _extract($data, $self->{items});
+    my $items = _extract($data, $self->{items}, $response);
 
     die "pagination items extractor must return an array reference\n" if ref($items) ne 'ARRAY';
     $self->{buffer} = [ @$items ];
     $self->{started} = 1;
 
     if ($self->{mode} eq 'next_url') {
-        my $next = _extract($data, $self->{next});
+        my $next = _extract($data, $self->{next}, $response);
         if (!defined($next) || $next eq '') {
             $self->{finished} = 1;
         }
@@ -90,7 +90,7 @@ sub _fetch_page {
         }
     }
     elsif ($self->{mode} eq 'cursor') {
-        my $next = _extract($data, $self->{next});
+        my $next = _extract($data, $self->{next}, $response);
         if (!defined($next) || $next eq '') {
             $self->{finished} = 1;
         }
@@ -144,8 +144,8 @@ sub _guard_continuation {
 }
 
 sub _extract {
-    my ($data, $extractor) = @_;
-    return $extractor->($data) if ref($extractor) eq 'CODE';
+    my ($data, $extractor, $response) = @_;
+    return $extractor->($data, $response) if ref($extractor) eq 'CODE';
     return $data if !defined($extractor) || $extractor eq '';
 
     my $value = $data;
