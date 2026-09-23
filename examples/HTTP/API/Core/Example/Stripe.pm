@@ -59,8 +59,10 @@ sub create_customer {
 sub _form_escape {
     my ($value) = @_;
     $value = '' if !defined $value;
-    $value =~ s/([^A-Za-z0-9_.~-])/sprintf('%%%02X', ord($1))/ge;
-    return $value;
+    my $bytes = "$value";
+    utf8::encode($bytes) if utf8::is_utf8($bytes);
+    $bytes =~ s/([^A-Za-z0-9_.~-])/sprintf('%%%02X', ord($1))/ge;
+    return $bytes;
 }
 
 1;
