@@ -40,7 +40,7 @@ sub customers_pager {
 sub create_customer {
     my ($self, %args) = @_;
     my $idempotency_key = delete $args{idempotency_key};
-    my $content = form_urlencode(\\%args);
+    my $content = form_urlencode(\%args);
 
     return $self->{api}->post(
         '/customers',
