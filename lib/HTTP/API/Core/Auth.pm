@@ -56,9 +56,10 @@ sub api_key_auth {
         if ($url =~ s/(#.*)\z//) {
             $fragment = $1;
         }
-        return if $url =~ /(?:[?&])\Q$name\E=/;
+        my $encoded_name = _uri_escape($name);
+        return if $url =~ /(?:[?&])\Q$encoded_name\E=/;
         my $separator = index($url, '?') >= 0 ? '&' : '?';
-        $ctx->{url} = $url . $separator . _uri_escape($name) . '=' . _uri_escape($value) . $fragment;
+        $ctx->{url} = $url . $separator . $encoded_name . '=' . _uri_escape($value) . $fragment;
     };
 }
 
