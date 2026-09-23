@@ -54,7 +54,7 @@ subtest gitlab => sub {
         transport => sub {
             my ($method, $url, $opts) = @_;
             push @calls, [$method, $url, $opts];
-            my $content = $url =~ /page=2(?:&|$)/
+            my $content = $url =~ /(?:[?&])page=2(?:&|$)/
                 ? '[]'
                 : '[{"id":1},{"id":2}]';
             return {
