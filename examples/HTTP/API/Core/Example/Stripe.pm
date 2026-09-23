@@ -5,6 +5,7 @@ use warnings;
 
 use HTTP::API::Core;
 use HTTP::API::Core::Auth qw(bearer_auth);
+use HTTP::API::Core::Form qw(form_urlencode);
 
 sub new {
     my ($class, %args) = @_;
@@ -39,9 +40,7 @@ sub customers_pager {
 sub create_customer {
     my ($self, %args) = @_;
     my $idempotency_key = delete $args{idempotency_key};
-    my $content = join '&', map {
-        _form_escape($_) . '=' . _form_escape($args{$_})
-    } sort keys %args;
+    my $content = form_urlencode(\%args);
 
     return $self->{api}->post(
         '/customers',
@@ -54,15 +53,6 @@ sub create_customer {
             },
         ) : ()),
     );
-}
-
-sub _form_escape {
-    my ($value) = @_;
-    $value = '' if !defined $value;
-    my $bytes = "$value";
-    utf8::encode($bytes) if utf8::is_utf8($bytes);
-    $bytes =~ s/([^A-Za-z0-9_.~-])/sprintf('%%%02X', ord($1))/ge;
-    return $bytes;
 }
 
 1;
