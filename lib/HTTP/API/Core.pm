@@ -92,7 +92,12 @@ sub request {
 
     my $request_headers = exists $opts{headers} ? delete($opts{headers}) : {};
     die "headers must be a hash reference\n" if ref($request_headers) ne 'HASH';
-    my %headers = (%{ $self->{headers} }, %$request_headers);
+    my %headers = %{ $self->{headers} };
+    for my $name (keys %$request_headers) {
+        my $wanted = lc $name;
+        delete @headers{ grep { lc($_) eq $wanted } keys %headers };
+        $headers{$name} = $request_headers->{$name};
+    }
 
     if (exists $opts{idempotency}) {
         my $idempotency = delete $opts{idempotency};
@@ -627,7 +632,8 @@ C<next_url>, C<page>, and C<cursor>.
 Pass C<json> to encode a Perl value as JSON, or C<content> to send raw content.
 Pass C<query> as a hash reference to append percent-encoded query parameters.
 Array-reference values produce repeated keys and undefined values are omitted.
-Per-request C<headers> override default headers. Pass C<retry =E<gt> 0> to
+Per-request C<headers> override default headers case-insensitively, preserving the
+per-request header spelling. Pass C<retry =E<gt> 0> to
 disable retry for one request, or a retry hash to override the policy. A
 C<hooks> hash can add request-local hooks after client-level hooks.
 
