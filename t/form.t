@@ -7,8 +7,10 @@ use HTTP::API::Core::Form qw(form_urlencode);
 
 is form_urlencode({ b => 2, a => 1 }), 'a=1&b=2',
     'orders keys deterministically';
-is form_urlencode({ q => 'a b+c' }), 'q=a%20b%2Bc',
-    'percent-encodes spaces and reserved characters';
+is form_urlencode({ q => 'a b+c' }), 'q=a+b%2Bc',
+    'uses plus for spaces and percent-encodes reserved characters';
+is form_urlencode({ punctuation => '*~' }), 'punctuation=*%7E',
+    'uses the form-urlencoded percent-encode set';
 is form_urlencode({ name => "é😀" }), 'name=%C3%A9%F0%9F%98%80',
     'percent-encodes UTF-8 bytes';
 is form_urlencode({ empty => undef }), 'empty=',
