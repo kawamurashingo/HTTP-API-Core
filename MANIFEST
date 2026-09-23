@@ -40,6 +40,7 @@ t/form.t
 t/hooks-contract.t
 t/hooks.t
 t/idempotency.t
+t/json-headers.t
 t/observability.t
 t/pagination-contract.t
 t/pagination.t
