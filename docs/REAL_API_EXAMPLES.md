@@ -18,8 +18,10 @@ use lib 'examples';
 ## GitHub
 
 GitHub's authenticated-repositories endpoint returns a top-level JSON array and
-uses `page` plus `per_page`. A code-reference item extractor maps the top-level
-array into the common pager interface.
+advertises continuation through the HTTP `Link` header. The example opts in to
+response-aware extractors, maps the top-level array into the common pager
+interface, and follows the exact `rel="next"` URL while keeping Link parsing in
+the GitHub service layer.
 
 ```perl
 use HTTP::API::Core::Example::GitHub;
@@ -154,9 +156,15 @@ API reference: <https://docs.gitlab.com/api/rest/>
 ## Validation notes
 
 Across GitHub, Slack, Cloudflare, Stripe, and GitLab, the recurring shapes are
-covered by the existing transport-independent primitives: header authentication,
-query encoding, page/cursor pagination, generic idempotency headers, normalized
-rate-limit metadata, request IDs, and structured HTTP/transport errors.
+covered by the transport-independent primitives: header authentication, query
+encoding, page/cursor/next-URL pagination, response-aware pagination extractors,
+generic idempotency headers, normalized rate-limit metadata, request IDs, and
+structured HTTP/transport errors.
+
+The 1.08 review also hardened two generic boundaries exposed by those recipes:
+cross-origin absolute pagination continuations are rejected by default to avoid
+forwarding client credentials unexpectedly, and mutable `before_request` context
+fields are revalidated before transport.
 
 Two patterns remain deliberately service-specific:
 
