@@ -52,9 +52,13 @@ sub api_key_auth {
     return sub {
         my ($ctx) = @_;
         my $url = $ctx->{url};
+        my $fragment = '';
+        if ($url =~ s/(#.*)\z//) {
+            $fragment = $1;
+        }
         return if $url =~ /(?:[?&])\Q$name\E=/;
         my $separator = index($url, '?') >= 0 ? '&' : '?';
-        $ctx->{url} = $url . $separator . _uri_escape($name) . '=' . _uri_escape($value);
+        $ctx->{url} = $url . $separator . _uri_escape($name) . '=' . _uri_escape($value) . $fragment;
     };
 }
 
