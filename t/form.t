@@ -22,4 +22,15 @@ eval { form_urlencode([]) };
 like $@, qr/form parameters must be a hash reference/,
     'rejects non-hash parameters';
 
+eval { form_urlencode({ nested => { x => 1 } }) };
+like $@, qr/form parameter values must be scalars/,
+    'rejects nested reference values';
+
+eval { form_urlencode({ mixed => ['ok', { x => 1 }] }) };
+like $@, qr/form parameter array values must contain only scalars/,
+    'rejects reference values nested inside arrays';
+
+is form_urlencode({ tag => ['one', undef, 'two'] }), 'tag=one&tag=&tag=two',
+    'preserves undefined array values as empty form values';
+
 done_testing;
