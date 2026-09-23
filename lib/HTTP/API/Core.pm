@@ -172,9 +172,15 @@ sub request {
 
         my $hook_error = _run_hooks($hooks->{before_request}, $context);
         die _hook_error($hook_error, $method, $url) if $hook_error;
+        die "method must be a non-empty scalar\n"
+            if !defined($context->{method}) || ref($context->{method}) || $context->{method} eq '';
+        die "url must be a defined scalar\n"
+            if !defined($context->{url}) || ref($context->{url});
         die "headers must be a hash reference\n"
             if ref($context->{headers}) ne 'HASH';
         _validate_header_values($context->{headers});
+        die "content must be a scalar or undef\n"
+            if defined($context->{content}) && ref($context->{content});
 
         my $started_at = time;
         $context->{started_at} = $started_at;
