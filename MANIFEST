@@ -26,6 +26,7 @@ examples/HTTP/API/Core/Example/TransportAdapters.pm
 lib/HTTP/API/Core.pm
 lib/HTTP/API/Core/Auth.pm
 lib/HTTP/API/Core/Error.pm
+lib/HTTP/API/Core/Form.pm
 lib/HTTP/API/Core/Pagination.pm
 lib/HTTP/API/Core/RateLimit.pm
 lib/HTTP/API/Core/Response.pm
@@ -35,6 +36,7 @@ t/auth-helpers.t
 t/client.t
 t/contracts.t
 t/error-model.t
+t/form.t
 t/hooks-contract.t
 t/hooks.t
 t/idempotency.t
