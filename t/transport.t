@@ -92,6 +92,27 @@ use HTTP::API::Core;
 }
 
 {
+    for my $case (
+        ['undefined', undef],
+        ['non-numeric', 'abc'],
+        ['too low', 99],
+        ['too high', 600],
+    ) {
+        my ($name, $status) = @$case;
+        my $api = HTTP::API::Core->new(
+            base_url => 'https://api.example.test',
+            retry => { attempts => 1 },
+            transport => sub { return { status => $status } },
+        );
+
+        my $error;
+        eval { $api->get('/items'); 1 } or $error = $@;
+        isa_ok $error, 'HTTP::API::Core::Error', "$name transport status is structured";
+        is $error->category, 'transport', "$name transport status is rejected";
+    }
+}
+
+{
     package Local::ThrowingTransport;
     sub request { die "socket failed\n" }
 
