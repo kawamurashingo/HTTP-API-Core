@@ -23,7 +23,8 @@ sub _escape {
     $value = '' if !defined $value;
     my $bytes = "$value";
     utf8::encode($bytes) if utf8::is_utf8($bytes);
-    $bytes =~ s/([^A-Za-z0-9_.~-])/sprintf('%%%02X', ord($1))/ge;
+    $bytes =~ s/([^A-Za-z0-9*_. -])/sprintf('%%%02X', ord($1))/ge;
+    $bytes =~ tr/ /+/;
     return $bytes;
 }
 
