@@ -21,13 +21,14 @@ sub new {
 
 sub projects_pager {
     my ($self, %query) = @_;
+    my $per_page = delete($query{per_page}) || 20;
     return $self->{api}->paginate(
         '/projects',
         mode => 'page',
         items => sub { $_[0] },
         page_param => 'page',
         page_size_param => 'per_page',
-        page_size => delete($query{per_page}),
+        page_size => $per_page,
         query => \%query,
     );
 }
