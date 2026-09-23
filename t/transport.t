@@ -113,6 +113,28 @@ use HTTP::API::Core;
 }
 
 {
+    my $api = HTTP::API::Core->new(
+        base_url => 'https://api.example.test',
+        retry => { attempts => 1 },
+        transport => sub { return { status => 200, headers => [] } },
+    );
+
+    my $error;
+    eval { $api->get('/items'); 1 } or $error = $@;
+    isa_ok $error, 'HTTP::API::Core::Error';
+    is $error->category, 'transport', 'non-hash response headers are rejected as transport errors';
+    ok $error->retryable, 'malformed response headers remain retryable transport failures';
+}
+
+{
+    my $api = HTTP::API::Core->new(
+        base_url => 'https://api.example.test',
+        transport => sub { return { status => 200, headers => undef, content => '{}' } },
+    );
+    is_deeply $api->get('/items')->headers, {}, 'undefined response headers normalize to an empty hash';
+}
+
+{
     package Local::ThrowingTransport;
     sub request { die "socket failed\n" }
 

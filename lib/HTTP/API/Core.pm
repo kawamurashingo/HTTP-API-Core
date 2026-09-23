@@ -259,7 +259,8 @@ sub _request_once {
         || ref($raw->{status})
         || $raw->{status} !~ /\A\d{3}\z/
         || $raw->{status} < 100
-        || $raw->{status} > 599) {
+        || $raw->{status} > 599
+        || (defined($raw->{headers}) && ref($raw->{headers}) ne 'HASH')) {
         my $elapsed = time - $started_at;
         return (undef, HTTP::API::Core::Error->new(
             category  => 'transport',
