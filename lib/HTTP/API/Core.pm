@@ -491,6 +491,8 @@ sub _append_query {
 
         my @values;
         if (ref($value) eq 'ARRAY') {
+            die "query parameter array values must contain only scalars or undef\n"
+                if grep { defined($_) && ref($_) } @$value;
             @values = grep { defined $_ } @$value;
         }
         elsif (ref($value)) {
