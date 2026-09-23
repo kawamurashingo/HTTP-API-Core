@@ -203,7 +203,7 @@ my $header_pager = HTTP::API::Core::Pagination->new(
     next   => sub {
         my ($data, $response) = @_;
         my $link = $response->header('link') || '';
-        return $1 if $link =~ /<([^>]+)>;\\s*rel="next"/;
+        return $1 if $link =~ /<([^>]+)>;\s*rel="next"/;
         return undef;
     },
 );
