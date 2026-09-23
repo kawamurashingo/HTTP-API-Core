@@ -20,6 +20,11 @@ Values are percent-encoded. Array references generate repeated keys, undefined v
 
 `before_request` hooks see the final encoded URL.
 
+## Request headers
+
+Per-request `headers` must be a hash reference. They are merged over client-level default headers before idempotency handling and lifecycle hooks run. Invalid request header containers are rejected with a descriptive validation error rather than being passed to the transport.
+
+
 ## Authentication
 
 `HTTP::API::Core::Auth` provides small authentication helpers implemented as `before_request` hooks:
