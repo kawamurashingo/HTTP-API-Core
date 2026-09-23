@@ -34,7 +34,7 @@ The `content` option is omitted entirely when the request has no body. It is pre
 
 A transport must return a hash reference with:
 
-- `status` — required HTTP status
+- `status` — required three-digit HTTP status in the `100`-`599` range
 - `reason` — optional reason phrase
 - `headers` — optional hash reference of response headers
 - `content` — optional raw response body
@@ -58,7 +58,7 @@ A transport may throw an exception for connection, TLS, timeout, DNS, or other t
 
 If a transport throws an existing `HTTP::API::Core::Error`, that structured error is preserved rather than wrapped again.
 
-Returning a non-hash value or a hash without `status` is normalized into a retryable structured `transport` error.
+Returning a non-hash value, a hash without `status`, or a hash with an invalid status value is normalized into a retryable structured `transport` error.
 
 Transport adapters should not implement API-level retry, pagination, rate-limit policy, JSON decoding, or authentication unless required by the underlying HTTP library. Those responsibilities belong above the transport boundary.
 
