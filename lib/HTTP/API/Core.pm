@@ -90,7 +90,9 @@ sub request {
     die "query must be a hash reference\n" if ref($query) ne 'HASH';
     $url = _append_query($url, $query);
 
-    my %headers = (%{ $self->{headers} }, %{ delete($opts{headers}) || {} });
+    my $request_headers = exists $opts{headers} ? delete($opts{headers}) : {};
+    die "headers must be a hash reference\n" if ref($request_headers) ne 'HASH';
+    my %headers = (%{ $self->{headers} }, %$request_headers);
 
     if (exists $opts{idempotency}) {
         my $idempotency = delete $opts{idempotency};
