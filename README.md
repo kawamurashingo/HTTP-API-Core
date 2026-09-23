@@ -166,7 +166,7 @@ my $response = $api->post('/token',
 );
 ```
 
-The helper uses UTF-8-aware form encoding, deterministic key ordering, and repeated keys for array-reference values. Content-Type remains explicit so request policy stays visible at the call site.
+The helper uses UTF-8-aware form encoding, deterministic key ordering, and repeated keys for array-reference values. Parameter values may be scalars, array references containing scalars, or `undef`; unsupported nested references are rejected instead of being stringified. `undef` is encoded as an empty form value. Content-Type remains explicit so request policy stays visible at the call site.
 
 ### Authentication
 
