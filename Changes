@@ -1,5 +1,10 @@
 Revision history for HTTP-API-Core
 
+1.05  2026-09-23
+    - Preserve URL fragments when query API-key authentication appends credentials.
+    - Align pagination query validation and encoding with direct request queries.
+    - Honor explicit JSON Content-Type and Accept headers case-insensitively.
+
 1.04  2026-09-23
     - Document and protect the form_urlencode helper as part of the public 1.x API.
     - Preserve URL fragments when pagination appends query parameters.
