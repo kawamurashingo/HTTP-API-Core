@@ -165,3 +165,9 @@ Across the 1.x series, the project intends to preserve:
 - documented validation behavior
 
 New optional pagination capabilities may be added in minor releases, but existing documented behavior should not require downstream client changes.
+
+## Response-aware extractors
+
+Code-reference extractors receive the decoded response body as their first argument and the `HTTP::API::Core::Response` object as their second argument. Existing extractors that only use the first argument remain compatible.
+
+This allows service layers to follow continuation metadata carried in response headers, such as an HTTP `Link` header, without adding service-specific header parsing to the core.
