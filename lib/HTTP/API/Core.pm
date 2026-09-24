@@ -177,8 +177,7 @@ sub request {
         die _hook_error($hook_error, $method, $url) if $hook_error;
         die "method must be a non-empty scalar\n"
             if !defined($context->{method}) || ref($context->{method}) || $context->{method} eq '';
-        die "url must be a defined scalar\n"
-            if !defined($context->{url}) || ref($context->{url});
+        _validate_request_url($context->{url});
         die "headers must be a hash reference\n"
             if ref($context->{headers}) ne 'HASH';
         _validate_header_values($context->{headers});
@@ -533,6 +532,14 @@ sub _uri_escape {
     utf8::encode($bytes) if utf8::is_utf8($bytes);
     $bytes =~ s/([^A-Za-z0-9\-._~])/sprintf('%%%02X', ord($1))/ge;
     return $bytes;
+}
+
+sub _validate_request_url {
+    my ($url) = @_;
+    die "url must be a non-empty scalar\n"
+        if !defined($url) || ref($url) || $url eq '';
+    die "url must be an absolute HTTP(S) URL\n"
+        if $url !~ m{\Ahttps?://(?:[^/?#\s@]+@)?(?:\[[0-9A-Fa-f:.]+\]|[^/?#\s:@]+)(?::\d+)?(?:[/?#]|\z)}i;
 }
 
 sub _validate_header_values {
