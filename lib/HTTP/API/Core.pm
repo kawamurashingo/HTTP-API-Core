@@ -420,9 +420,11 @@ sub _normalize_retry {
     die "retry methods must be an array reference\n"
         if ref($methods) ne 'ARRAY';
 
-    my @methods = map { uc($_ // '') } @$methods;
     die "retry methods must not contain empty values\n"
-        if grep { $_ eq '' } @methods;
+        if grep { !defined($_) || (!ref($_) && $_ eq '') } @$methods;
+    die "retry methods must contain only scalar values\n"
+        if grep { ref($_) } @$methods;
+    my @methods = map { uc($_) } @$methods;
 
     die "unknown retry option: $_\n" for sort keys %copy;
 
