@@ -171,4 +171,17 @@ dies_like(
     'constructor rejects reference-valued timeout',
 );
 
+
+dies_like(
+    sub { $request_api->request({}, '/x') },
+    qr/method must be a non-empty scalar/,
+    'request rejects reference-valued method',
+);
+
+dies_like(
+    sub { $request_api->request('GET', []) },
+    qr/path must be a scalar/,
+    'request rejects reference-valued path',
+);
+
 done_testing;
