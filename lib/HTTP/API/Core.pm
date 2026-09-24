@@ -587,7 +587,7 @@ __END__
 
 =head1 NAME
 
-HTTP::API::Core - Small foundation for JSON HTTP API clients
+HTTP::API::Core - Build REST and JSON API clients in Perl
 
 =head1 SYNOPSIS
 
@@ -628,10 +628,11 @@ HTTP::API::Core - Small foundation for JSON HTTP API clients
 
 =head1 DESCRIPTION
 
-HTTP::API::Core is a deliberately small base layer for building HTTP API
-clients. It provides base URL handling, default headers, JSON request/response
-helpers, timeout configuration, structured errors, conservative retries,
-pagination helpers, normalized rate-limit metadata, and lifecycle hooks.
+HTTP::API::Core is a deliberately small, dependency-light base layer for
+building REST and JSON API clients in Perl. It provides base URL handling,
+default headers, JSON request/response helpers, timeout configuration,
+structured errors, conservative retries, pagination helpers, normalized
+rate-limit metadata, lifecycle hooks, and pluggable HTTP transports.
 
 Retry is enabled by default for GET, HEAD, PUT, DELETE, and OPTIONS. POST and
 PATCH are not retried automatically. Retryable failures include transport
