@@ -20,6 +20,12 @@ dies_like(
 );
 
 dies_like(
+    sub { HTTP::API::Core->new(base_url => {}) },
+    qr/base_url must be a non-empty scalar/,
+    'constructor rejects reference-valued base_url',
+);
+
+dies_like(
     sub { HTTP::API::Core->new(base_url => 'https://api.example.test', headers => []) },
     qr/headers must be a hash reference/,
     'constructor validates headers',
