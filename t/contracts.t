@@ -164,6 +164,7 @@ dies_like(
     'request rejects unknown options',
 );
 
+
 dies_like(
     sub { HTTP::API::Core->new(base_url => 'https://api.example.test', timeout => {}) },
     qr/timeout must be a positive number/,
@@ -171,10 +172,3 @@ dies_like(
 );
 
 done_testing;
-
-
-dies_like(
-    sub { HTTP::API::Core->new(base_url => 'https://api.example.test', timeout => {}) },
-    qr/timeout must be a positive number/,
-    'constructor rejects reference-valued timeout',
-);
