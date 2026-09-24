@@ -29,10 +29,7 @@ is_deeply(
     'default retry policy is stable',
 );
 
-my $normali
-
-done_testing;
-ed = HTTP::API::Core->new(
+my $normalized = HTTP::API::Core->new(
     base_url => 'https://api.example.test',
     retry => {
         attempts   => '2',
@@ -194,6 +191,7 @@ is(
     'invalid HTTP-date time is rejected',
 );
 
+
 dies_like(
     sub {
         HTTP::API::Core->new(
@@ -226,3 +224,5 @@ dies_like(
     qr/retry max_delay must be a non-negative number/,
     'reference-valued retry max_delay rejected',
 );
+
+done_testing;
