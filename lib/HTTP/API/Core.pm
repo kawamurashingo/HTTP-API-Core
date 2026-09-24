@@ -121,6 +121,9 @@ sub request {
         $headers{$header} = "$key" if !$already;
     }
 
+    die "json and content request options are mutually exclusive\n"
+        if exists($opts{json}) && exists($opts{content});
+
     my $content;
 
     if (exists $opts{json}) {
