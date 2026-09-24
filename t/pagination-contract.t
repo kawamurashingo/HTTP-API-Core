@@ -243,4 +243,16 @@ dies_like(
     'reference-valued mode rejected',
 );
 
+my $false_mode = bless {}, 'T::FalsePaginationMode';
+{
+    package T::FalsePaginationMode;
+    use overload bool => sub { 0 }, fallback => 1;
+}
+
+dies_like(
+    sub { HTTP::API::Core::Pagination->new(client => $client, path => '/x', mode => $false_mode) },
+    qr/mode must be a scalar/,
+    'false-overloaded reference-valued mode rejected before defaulting',
+);
+
 done_testing;
