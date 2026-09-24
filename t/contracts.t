@@ -44,6 +44,27 @@ dies_like(
 );
 
 dies_like(
+    sub {
+        HTTP::API::Core->new(
+            base_url => 'https://api.example.test',
+            retry => { methods => [ [] ] },
+        );
+    },
+    qr/retry methods must contain only non-empty scalars/,
+    'constructor rejects reference-valued retry methods',
+);
+
+my $lowercase_retry = HTTP::API::Core->new(
+    base_url => 'https://api.example.test',
+    retry => { methods => ['get'] },
+);
+is_deeply(
+    $lowercase_retry->retry->{methods},
+    ['GET'],
+    'constructor normalizes scalar retry methods to uppercase',
+);
+
+dies_like(
     sub { HTTP::API::Core->new(base_url => 'https://api.example.test', mystery => 1) },
     qr/unknown constructor option: mystery/,
     'constructor rejects unknown options',
