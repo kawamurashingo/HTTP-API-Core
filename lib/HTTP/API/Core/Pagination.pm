@@ -8,8 +8,10 @@ sub new {
     my $client = delete $args{client} or die "client is required\n";
     my $path   = delete $args{path};
     die "path is required\n" if !defined $path;
+    die "path must be a scalar\n" if ref($path);
 
     my $mode = delete($args{mode}) || 'next_url';
+    die "mode must be a scalar\n" if ref($mode);
     die "unsupported pagination mode: $mode\n"
         if $mode ne 'next_url' && $mode ne 'page' && $mode ne 'cursor';
 
