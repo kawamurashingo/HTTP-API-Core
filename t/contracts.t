@@ -50,7 +50,7 @@ dies_like(
             retry => { methods => [ [] ] },
         );
     },
-    qr/retry methods must contain only non-empty scalars/,
+    qr/retry methods must contain only scalar values/,
     'constructor rejects reference-valued retry methods',
 );
 
