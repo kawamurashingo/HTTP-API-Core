@@ -86,6 +86,7 @@ sub _fetch_page {
 
     if ($self->{mode} eq 'next_url') {
         my $next = _extract($data, $self->{next}, $response, $self->{response_aware_extractors});
+        die "pagination next URL continuation must be a scalar\n" if defined($next) && ref($next);
         if (!defined($next) || $next eq '') {
             $self->{finished} = 1;
         }
@@ -97,6 +98,7 @@ sub _fetch_page {
     }
     elsif ($self->{mode} eq 'cursor') {
         my $next = _extract($data, $self->{next}, $response, $self->{response_aware_extractors});
+        die "pagination cursor continuation must be a scalar\n" if defined($next) && ref($next);
         if (!defined($next) || $next eq '') {
             $self->{finished} = 1;
         }

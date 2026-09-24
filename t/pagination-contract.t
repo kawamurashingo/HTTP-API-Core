@@ -255,4 +255,31 @@ dies_like(
     'false-overloaded reference-valued mode rejected before defaulting',
 );
 
+my $bad_next_client = T::PagerClient->new({
+    '/bad-next' => { items => [1], next => {} },
+});
+my $bad_next = HTTP::API::Core::Pagination->new(
+    client => $bad_next_client,
+    path   => '/bad-next',
+);
+dies_like(
+    sub { $bad_next->all },
+    qr/pagination next URL continuation must be a scalar/,
+    'reference-valued next URL continuation rejected',
+);
+
+my $bad_cursor_client = T::PagerClient->new({
+    '/bad-cursor' => { items => [1], next_cursor => [] },
+});
+my $bad_cursor = HTTP::API::Core::Pagination->new(
+    client => $bad_cursor_client,
+    path   => '/bad-cursor',
+    mode   => 'cursor',
+);
+dies_like(
+    sub { $bad_cursor->all },
+    qr/pagination cursor continuation must be a scalar/,
+    'reference-valued cursor continuation rejected',
+);
+
 done_testing;
