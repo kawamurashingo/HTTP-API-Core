@@ -218,4 +218,17 @@ my $allowed_cross_origin = HTTP::API::Core::Pagination->new(
 is_deeply(scalar($allowed_cross_origin->all), [1, 2],
     'cross-origin continuation can be explicitly enabled');
 
+
+dies_like(
+    sub { HTTP::API::Core::Pagination->new(client => $client, path => '/x', page_size => {}) },
+    qr/page_size must be a positive integer/,
+    'reference-valued page size rejected',
+);
+
+dies_like(
+    sub { HTTP::API::Core::Pagination->new(client => $client, path => '/x', start_page => []) },
+    qr/start_page must be a positive integer/,
+    'reference-valued start page rejected',
+);
+
 done_testing;
