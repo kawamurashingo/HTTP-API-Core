@@ -191,9 +191,6 @@ is(
     'invalid HTTP-date time is rejected',
 );
 
-done_testing;
-
-
 dies_like(
     sub {
         HTTP::API::Core->new(
