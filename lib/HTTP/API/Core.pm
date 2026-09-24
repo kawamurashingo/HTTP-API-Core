@@ -539,7 +539,7 @@ sub _validate_request_url {
     die "url must be a non-empty scalar\n"
         if !defined($url) || ref($url) || $url eq '';
     die "url must be an absolute HTTP(S) URL\n"
-        if $url !~ m{\Ahttps?://[^/?#\s]+(?:[/?#]|\z)}i;
+        if $url !~ m{\Ahttps?://(?:[^/?#\s@]+@)?(?:\[[0-9A-Fa-f:.]+\]|[^/?#\s:@]+)(?::\d+)?(?:[/?#]|\z)}i;
 }
 
 sub _validate_header_values {
