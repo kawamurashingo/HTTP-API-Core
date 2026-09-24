@@ -132,6 +132,12 @@ dies_like(
 );
 
 dies_like(
+    sub { $request_api->post('/x', json => { ok => 1 }, content => 'raw') },
+    qr/json and content request options are mutually exclusive/,
+    'request rejects conflicting body options',
+);
+
+dies_like(
     sub { $request_api->get('/x', mystery => 1) },
     qr/unknown request option: mystery/,
     'request rejects unknown options',
