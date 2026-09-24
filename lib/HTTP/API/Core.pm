@@ -28,6 +28,7 @@ sub new {
     my $timeout = exists $args{timeout} ? delete($args{timeout}) : 10;
     die "timeout must be a positive number\n"
         if !defined($timeout)
+        || ref($timeout)
         || $timeout !~ /\A(?:\d+(?:\.\d*)?|\.\d+)\z/
         || $timeout <= 0;
 
@@ -397,7 +398,7 @@ sub _normalize_retry {
 
     my $attempts = exists $copy{attempts} ? delete($copy{attempts}) : 3;
     die "retry attempts must be a positive integer\n"
-        if $attempts !~ /\A\d+\z/ || $attempts < 1;
+        if ref($attempts) || $attempts !~ /\A\d+\z/ || $attempts < 1;
 
     my $base_delay = exists $copy{base_delay}
         ? delete($copy{base_delay})
@@ -560,6 +561,7 @@ sub _set_header_if_absent {
 sub _non_negative_number {
     my ($value) = @_;
     return defined($value)
+        && !ref($value)
         && $value =~ /\A(?:\d+(?:\.\d*)?|\.\d+)\z/
         && $value >= 0;
 }
