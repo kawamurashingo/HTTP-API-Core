@@ -29,7 +29,10 @@ is_deeply(
     'default retry policy is stable',
 );
 
-my $normalized = HTTP::API::Core->new(
+my $normali
+
+done_testing;
+ed = HTTP::API::Core->new(
     base_url => 'https://api.example.test',
     retry => {
         attempts   => '2',
