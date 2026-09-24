@@ -42,9 +42,9 @@ sub new {
     die "query must be a hash reference\n" if ref($self->{query}) ne 'HASH';
     die "request must be a hash reference\n" if ref($self->{request}) ne 'HASH';
     die "page_size must be a positive integer\n"
-        if defined($self->{page_size}) && ($self->{page_size} !~ /\A\d+\z/ || $self->{page_size} < 1);
+        if defined($self->{page_size}) && (ref($self->{page_size}) || $self->{page_size} !~ /\A\d+\z/ || $self->{page_size} < 1);
     die "start_page must be a positive integer\n"
-        if $self->{current_page} !~ /\A\d+\z/ || $self->{current_page} < 1;
+        if ref($self->{current_page}) || $self->{current_page} !~ /\A\d+\z/ || $self->{current_page} < 1;
     die "unknown pagination option: $_\n" for sort keys %args;
 
     return $self;
