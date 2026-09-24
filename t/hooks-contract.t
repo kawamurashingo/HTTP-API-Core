@@ -182,6 +182,8 @@ for my $case (
     ['url reference', sub { $_[0]{url} = {} }, qr/url must be a non-empty scalar/],
     ['empty url', sub { $_[0]{url} = '' }, qr/url must be a non-empty scalar/],
     ['missing authority', sub { $_[0]{url} = 'https:///broken' }, qr/url must be an absolute HTTP\(S\) URL/],
+    ['missing host after colon', sub { $_[0]{url} = 'https://:/broken' }, qr/url must be an absolute HTTP\(S\) URL/],
+    ['missing host after userinfo', sub { $_[0]{url} = 'https://@/broken' }, qr/url must be an absolute HTTP\(S\) URL/],
     ['non-http url', sub { $_[0]{url} = 'ftp://example.test/file' }, qr/url must be an absolute HTTP\(S\) URL/],
     ['content', sub { $_[0]{content} = [] }, qr/content must be a scalar or undef/],
 ) {
