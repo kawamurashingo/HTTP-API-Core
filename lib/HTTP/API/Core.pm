@@ -521,6 +521,7 @@ sub _append_query {
     my @pairs;
 
     for my $key (sort keys %$query) {
+        die "query parameter names must be scalars\n" if ref($key) ne '';
         my $value = $query->{$key};
         next if !defined $value;
 
