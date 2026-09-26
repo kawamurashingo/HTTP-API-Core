@@ -15,7 +15,10 @@ use HTTP::API::Core::Pagination;
 our $VERSION = '1.08';
 
 sub new {
-    my ($class, %args) = @_;
+    my $class = shift;
+    die "constructor option names must be scalars\n"
+        if grep { ref($_) ne '' } @_[ grep { $_ % 2 == 0 } 0 .. $#_ ];
+    my %args = @_;
 
     my $base_url = delete $args{base_url};
     my $base_url_ref = ref($base_url);
@@ -50,7 +53,6 @@ sub new {
     my $hooks = exists $args{hooks} ? delete($args{hooks}) : {};
     $hooks = _normalize_hooks($hooks);
 
-    die "constructor option names must be scalars\n" if grep { ref($_) ne '' } keys %args;
     die "unknown constructor option: $_\n" for sort keys %args;
 
     my $self = bless {
@@ -87,7 +89,10 @@ sub paginate {
 }
 
 sub request {
-    my ($self, $method, $path, %opts) = @_;
+    my ($self, $method, $path) = splice @_, 0, 3;
+    die "request option names must be scalars\n"
+        if grep { ref($_) ne '' } @_[ grep { $_ % 2 == 0 } 0 .. $#_ ];
+    my %opts = @_;
     my $method_ref = ref($method);
     die "method is required\n"
         if !defined($method) || ($method_ref eq '' && $method eq '');
@@ -175,7 +180,6 @@ sub request {
         : {};
     my $hooks = _merge_hooks($self->{hooks}, $request_hooks);
 
-    die "request option names must be scalars\n" if grep { ref($_) ne '' } keys %opts;
     die "unknown request option: $_\n" for sort keys %opts;
 
     my $attempts = _method_is_retryable($method, $retry)
