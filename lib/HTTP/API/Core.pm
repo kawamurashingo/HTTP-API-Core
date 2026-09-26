@@ -483,7 +483,7 @@ sub _retry_delay {
     return $retry_after if defined $retry_after;
 
     my $rate_limit = $error->rate_limit;
-    if ($rate_limit && $rate_limit->exhausted) {
+    if (defined($rate_limit) && $rate_limit->exhausted) {
         my $wait = $rate_limit->wait_seconds;
         return $wait if defined $wait;
     }
