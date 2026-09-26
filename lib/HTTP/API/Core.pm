@@ -410,8 +410,9 @@ sub _normalize_retry {
     my %copy = %$retry;
 
     my $attempts = exists $copy{attempts} ? delete($copy{attempts}) : 3;
+    my $attempts_ref = ref($attempts);
     die "retry attempts must be a positive integer\n"
-        if ref($attempts) || $attempts !~ /\A\d+\z/ || $attempts < 1;
+        if $attempts_ref ne '' || $attempts !~ /\A\d+\z/ || $attempts < 1;
 
     my $base_delay = exists $copy{base_delay}
         ? delete($copy{base_delay})
@@ -426,6 +427,7 @@ sub _normalize_retry {
         if !_non_negative_number($max_delay);
 
     my $jitter = exists $copy{jitter} ? delete($copy{jitter}) : 1;
+    die "retry jitter must be a scalar\n" if ref($jitter) ne '';
     $jitter = $jitter ? 1 : 0;
 
     my $methods = exists $copy{methods}
@@ -434,10 +436,10 @@ sub _normalize_retry {
     die "retry methods must be an array reference\n"
         if ref($methods) ne 'ARRAY';
 
-    die "retry methods must not contain empty values\n"
-        if grep { !defined($_) || (!ref($_) && $_ eq '') } @$methods;
     die "retry methods must contain only scalar values\n"
-        if grep { ref($_) } @$methods;
+        if grep { ref($_) ne '' } @$methods;
+    die "retry methods must not contain empty values\n"
+        if grep { !defined($_) || $_ eq '' } @$methods;
     my @methods = map { uc($_) } @$methods;
 
     die "unknown retry option: $_\n" for sort keys %copy;
@@ -575,7 +577,7 @@ sub _set_header_if_absent {
 sub _non_negative_number {
     my ($value) = @_;
     return defined($value)
-        && !ref($value)
+        && ref($value) eq ''
         && $value =~ /\A(?:\d+(?:\.\d*)?|\.\d+)\z/
         && $value >= 0;
 }
