@@ -73,18 +73,18 @@ sub timeout  { $_[0]->{timeout} }
 sub retry    { +{ %{ $_[0]->{retry} }, methods => [ @{ $_[0]->{retry}{methods} } ] } }
 sub hooks    { _clone_hooks($_[0]->{hooks}) }
 
-sub get    { my ($self, $path, %opts) = @_; return $self->request('GET',    $path, %opts) }
-sub post   { my ($self, $path, %opts) = @_; return $self->request('POST',   $path, %opts) }
-sub put    { my ($self, $path, %opts) = @_; return $self->request('PUT',    $path, %opts) }
-sub patch  { my ($self, $path, %opts) = @_; return $self->request('PATCH',  $path, %opts) }
-sub delete { my ($self, $path, %opts) = @_; return $self->request('DELETE', $path, %opts) }
+sub get    { my ($self, $path) = splice @_, 0, 2; return $self->request('GET',    $path, @_) }
+sub post   { my ($self, $path) = splice @_, 0, 2; return $self->request('POST',   $path, @_) }
+sub put    { my ($self, $path) = splice @_, 0, 2; return $self->request('PUT',    $path, @_) }
+sub patch  { my ($self, $path) = splice @_, 0, 2; return $self->request('PATCH',  $path, @_) }
+sub delete { my ($self, $path) = splice @_, 0, 2; return $self->request('DELETE', $path, @_) }
 
 sub paginate {
-    my ($self, $path, %opts) = @_;
+    my ($self, $path) = splice @_, 0, 2;
     return HTTP::API::Core::Pagination->new(
         client => $self,
         path   => $path,
-        %opts,
+        @_,
     );
 }
 
