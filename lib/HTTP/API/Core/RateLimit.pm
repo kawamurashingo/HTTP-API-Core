@@ -20,7 +20,11 @@ sub new {
 
 sub from_headers {
     my ($class, $headers) = @_;
-    $headers ||= {};
+    $headers = {} if !defined $headers;
+    die "rate-limit headers must be a hash reference\n"
+        if ref($headers) ne 'HASH';
+    die "rate-limit header values must be scalars or undef\n"
+        if grep { defined($_) && ref($_) ne '' } values %$headers;
     my %h = map { lc($_) => $headers->{$_} } keys %$headers;
 
     my $source = exists $h{'ratelimit-limit'} || exists $h{'ratelimit-remaining'} || exists $h{'ratelimit-reset'}
@@ -86,7 +90,8 @@ sub as_hash {
 
 sub _number {
     my ($value) = @_;
-    return undef if !defined($value) || $value !~ /\A(?:\d+(?:\.\d*)?|\.\d+)\z/;
+    return undef if !defined($value) || ref($value) ne ''
+        || $value !~ /\A(?:\d+(?:\.\d*)?|\.\d+)\z/;
     return 0 + $value;
 }
 
