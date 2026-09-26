@@ -24,7 +24,7 @@ sub new {
     die "base_url must be a non-empty scalar\n" if $base_url_ref ne '';
     $base_url =~ s{/+\z}{};
 
-    my $headers = delete($args{headers}) || {};
+    my $headers = exists($args{headers}) ? delete($args{headers}) : {};
     die "headers must be a hash reference\n" if ref($headers) ne 'HASH';
     _validate_header_values($headers);
 
