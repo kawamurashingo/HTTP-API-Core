@@ -50,6 +50,7 @@ sub new {
     my $hooks = exists $args{hooks} ? delete($args{hooks}) : {};
     $hooks = _normalize_hooks($hooks);
 
+    die "constructor option names must be scalars\n" if grep { ref($_) ne '' } keys %args;
     die "unknown constructor option: $_\n" for sort keys %args;
 
     my $self = bless {
@@ -174,6 +175,7 @@ sub request {
         : {};
     my $hooks = _merge_hooks($self->{hooks}, $request_hooks);
 
+    die "request option names must be scalars\n" if grep { ref($_) ne '' } keys %opts;
     die "unknown request option: $_\n" for sort keys %opts;
 
     my $attempts = _method_is_retryable($method, $retry)
