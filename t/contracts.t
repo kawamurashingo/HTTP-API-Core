@@ -25,6 +25,17 @@ dies_like(
     'constructor rejects reference-valued base_url',
 );
 
+{
+    package 0;
+}
+
+my $false_ref_base_url = bless {}, '0';
+dies_like(
+    sub { HTTP::API::Core->new(base_url => $false_ref_base_url) },
+    qr/base_url must be a non-empty scalar/,
+    'constructor rejects false-valued reference base_url before coercion',
+);
+
 dies_like(
     sub { HTTP::API::Core->new(base_url => 'https://api.example.test', headers => []) },
     qr/headers must be a hash reference/,
