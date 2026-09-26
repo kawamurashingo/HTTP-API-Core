@@ -357,6 +357,7 @@ sub _normalize_hooks {
     die "hooks must be a hash reference\n" if ref($hooks) ne 'HASH';
 
     my %copy = %$hooks;
+    die "hook names must be scalars\n" if grep { ref($_) ne '' } keys %copy;
     my %normalized;
     for my $name (qw(before_request after_response on_error)) {
         my $value = delete $copy{$name};
