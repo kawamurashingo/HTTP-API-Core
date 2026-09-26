@@ -75,8 +75,12 @@ sub exhausted {
 }
 
 sub wait_seconds {
-    my ($self, %args) = @_;
-    my $now = exists $args{now} ? $args{now} : time;
+    my $self = shift;
+    die "rate-limit wait_seconds option names must be scalars\n"
+        if grep { ref($_) ne '' } @_[ grep { $_ % 2 == 0 } 0 .. $#_ ];
+    my %args = @_;
+    my $now = exists $args{now} ? delete($args{now}) : time;
+    die "unknown rate-limit wait_seconds option: $_\n" for sort keys %args;
     die "rate-limit now must be a non-negative number\n"
         if !defined($now)
         || ref($now) ne ''
