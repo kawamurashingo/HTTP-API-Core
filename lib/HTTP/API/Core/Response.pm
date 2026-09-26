@@ -8,10 +8,28 @@ use HTTP::API::Core::RateLimit;
 
 sub new {
     my ($class, %args) = @_;
+
+    die "response status must be a valid HTTP status\n"
+        if !defined($args{status})
+        || ref($args{status}) ne ''
+        || $args{status} !~ /\A\d{3}\z/
+        || $args{status} < 100
+        || $args{status} > 599;
+
+    my $headers = defined($args{headers}) ? $args{headers} : {};
+    die "response headers must be a hash reference\n" if ref($headers) ne 'HASH';
+    die "response header values must be scalars or undef\n"
+        if grep { defined($_) && ref($_) ne '' } values %$headers;
+
+    for my $name (qw(reason content method url elapsed)) {
+        die "response $name must be a scalar or undef\n"
+            if defined($args{$name}) && ref($args{$name}) ne '';
+    }
+
     return bless {
         status  => $args{status},
         reason  => $args{reason},
-        headers => { map { lc($_) => $args{headers}{$_} } keys %{ $args{headers} || {} } },
+        headers => { map { lc($_) => $headers->{$_} } keys %$headers },
         content => defined($args{content}) ? $args{content} : '',
         method  => $args{method},
         url     => $args{url},
