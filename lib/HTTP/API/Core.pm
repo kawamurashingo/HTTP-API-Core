@@ -16,6 +16,7 @@ our $VERSION = '1.08';
 
 sub new {
     my $class = shift;
+    die "constructor options must be key/value pairs\n" if @_ % 2;
     die "constructor option names must be scalars\n"
         if grep { ref($_) ne '' } @_[ grep { $_ % 2 == 0 } 0 .. $#_ ];
     my %args = @_;
