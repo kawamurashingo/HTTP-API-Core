@@ -120,10 +120,12 @@ sub request {
         my $key = delete $copy{key};
         my $header = delete $copy{header};
 
+        my $key_ref = ref($key);
         die "idempotency key must be a non-empty scalar\n"
-            if !defined($key) || ref($key) || $key eq '';
+            if !defined($key) || $key_ref ne '' || $key eq '';
+        my $header_ref = ref($header);
         die "idempotency header must be a non-empty scalar\n"
-            if !defined($header) || ref($header) || $header eq '';
+            if !defined($header) || $header_ref ne '' || $header eq '';
         die "unknown idempotency option: $_\n" for sort keys %copy;
 
         my $wanted = lc $header;
