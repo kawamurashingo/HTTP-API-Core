@@ -382,7 +382,7 @@ sub _normalize_hooks {
 sub _clone_hooks {
     my ($hooks) = @_;
     return {
-        map { $_ => [ @{ $hooks->{$_} } ] }
+        map { $_ => [ @{ defined($hooks->{$_}) ? $hooks->{$_} : [] } ] }
         qw(before_request after_response on_error)
     };
 }
