@@ -4,7 +4,10 @@ use strict;
 use warnings;
 
 sub new {
-    my ($class, %args) = @_;
+    my $class = shift;
+    die "pagination option names must be scalars\n"
+        if grep { ref($_) ne '' } @_[ grep { $_ % 2 == 0 } 0 .. $#_ ];
+    my %args = @_;
     die "client is required\n" if !exists $args{client} || !defined $args{client};
     my $client = delete $args{client};
     my $path   = delete $args{path};
