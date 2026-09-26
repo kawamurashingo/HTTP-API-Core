@@ -324,7 +324,7 @@ sub _request_once {
     my $response = HTTP::API::Core::Response->new(
         status  => 0 + $raw->{status},
         reason  => $raw->{reason},
-        headers => $raw->{headers} || {},
+        headers => defined($raw->{headers}) ? $raw->{headers} : {},
         content => defined($raw->{content}) ? $raw->{content} : '',
         method  => $method,
         url     => $url,
