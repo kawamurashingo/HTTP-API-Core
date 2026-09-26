@@ -42,6 +42,16 @@ sub new {
         seen            => {},
     }, $class;
 
+    for my $name (qw(items next has_more)) {
+        next if !defined $self->{$name};
+        die "pagination $name extractor must be a code reference or scalar path\n"
+            if ref($self->{$name}) ne '' && ref($self->{$name}) ne 'CODE';
+    }
+    for my $name (qw(page_param page_size_param cursor_param)) {
+        die "pagination $name must be a non-empty scalar\n"
+            if !defined($self->{$name}) || ref($self->{$name}) ne '' || $self->{$name} eq '';
+    }
+
     die "query must be a hash reference\n" if ref($self->{query}) ne 'HASH';
     die "request must be a hash reference\n" if ref($self->{request}) ne 'HASH';
     die "page_size must be a positive integer\n"
