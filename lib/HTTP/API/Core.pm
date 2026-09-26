@@ -37,10 +37,11 @@ sub new {
         || $timeout <= 0;
 
     my $transport = delete $args{transport};
+    my $transport_class = blessed($transport);
     die "transport must be a code reference or object with request()\n"
         if defined($transport)
         && ref($transport) ne 'CODE'
-        && !(blessed($transport) && $transport->can('request'));
+        && !(defined($transport_class) && $transport->can('request'));
 
     my $retry = exists $args{retry} ? delete($args{retry}) : {};
     die "retry must be a hash reference\n" if ref($retry) ne 'HASH';
