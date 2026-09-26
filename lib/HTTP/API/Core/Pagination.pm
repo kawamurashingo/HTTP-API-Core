@@ -2,15 +2,11 @@ package HTTP::API::Core::Pagination;
 
 use strict;
 use warnings;
-use Scalar::Util qw(blessed);
 
 sub new {
     my ($class, %args) = @_;
     die "client is required\n" if !exists $args{client} || !defined $args{client};
     my $client = delete $args{client};
-    my $client_class = blessed($client);
-    die "client must be an object with request()\n"
-        if !defined($client_class) || !$client->can('request');
     my $path   = delete $args{path};
     die "path is required\n" if !defined $path;
     die "path must be a scalar\n" if ref($path) ne '';
