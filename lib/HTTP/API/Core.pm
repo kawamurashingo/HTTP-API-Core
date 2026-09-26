@@ -299,6 +299,8 @@ sub _request_once {
         || $raw->{status} < 100
         || $raw->{status} > 599
         || (defined($raw->{headers}) && ref($raw->{headers}) ne 'HASH')
+        || (defined($raw->{headers})
+            && grep { defined($_) && ref($_) ne '' } values %{ $raw->{headers} })
         || (defined($raw->{reason}) && ref($raw->{reason}) ne '')
         || (defined($raw->{content}) && ref($raw->{content}) ne '')) {
         my $elapsed = time - $started_at;
