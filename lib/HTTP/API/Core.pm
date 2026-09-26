@@ -64,7 +64,7 @@ sub new {
         hooks     => $hooks,
     }, $class;
 
-    $self->{http} = HTTP::Tiny->new(timeout => $timeout) if !$transport;
+    $self->{http} = HTTP::Tiny->new(timeout => $timeout) if !defined $transport;
     return $self;
 }
 
@@ -260,7 +260,7 @@ sub _request_once {
     my $started_at = time;
 
     eval {
-        if ($self->{transport}) {
+        if (defined $self->{transport}) {
             my $request_opts = {
                 headers => $headers,
                 (defined($content) ? (content => $content) : ()),
