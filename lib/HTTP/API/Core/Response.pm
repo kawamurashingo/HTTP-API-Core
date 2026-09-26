@@ -18,6 +18,8 @@ sub new {
 
     my $headers = defined($args{headers}) ? $args{headers} : {};
     die "response headers must be a hash reference\n" if ref($headers) ne 'HASH';
+    die "response header names must be scalars\n"
+        if grep { ref($_) ne '' } keys %$headers;
     die "response header values must be scalars or undef\n"
         if grep { defined($_) && ref($_) ne '' } values %$headers;
 
@@ -76,7 +78,12 @@ sub request_id {
 
 sub url        { $_[0]->{url} }
 sub is_success { $_[0]->{status} >= 200 && $_[0]->{status} < 300 }
-sub header      { my ($self, $name) = @_; return $self->{headers}{lc $name} }
+sub header {
+    my ($self, $name) = @_;
+    die "response header name must be a defined scalar\n"
+        if !defined($name) || ref($name) ne '';
+    return $self->{headers}{lc $name};
+}
 sub rate_limit  { HTTP::API::Core::RateLimit->from_headers($_[0]->{headers}) }
 
 sub json {
