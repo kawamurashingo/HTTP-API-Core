@@ -6,6 +6,18 @@ use Time::HiRes qw(time);
 
 sub new {
     my ($class, %args) = @_;
+
+    for my $name (qw(limit remaining used reset reset_epoch retry_after)) {
+        die "rate-limit $name must be a non-negative number or undef\n"
+            if defined($args{$name})
+            && (ref($args{$name}) ne ''
+                || $args{$name} !~ /\A(?:\d+(?:\.\d*)?|\.\d+)\z/);
+    }
+    for my $name (qw(resource source)) {
+        die "rate-limit $name must be a scalar or undef\n"
+            if defined($args{$name}) && ref($args{$name}) ne '';
+    }
+
     return bless {
         limit       => $args{limit},
         remaining   => $args{remaining},
@@ -62,6 +74,10 @@ sub exhausted {
 sub wait_seconds {
     my ($self, %args) = @_;
     my $now = exists $args{now} ? $args{now} : time;
+    die "rate-limit now must be a non-negative number\n"
+        if !defined($now)
+        || ref($now) ne ''
+        || $now !~ /\A(?:\d+(?:\.\d*)?|\.\d+)\z/;
 
     return $self->{retry_after} if defined $self->{retry_after};
     return $self->{reset} if defined $self->{reset};
