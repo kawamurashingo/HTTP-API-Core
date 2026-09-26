@@ -197,7 +197,7 @@ sub request {
         };
 
         my $hook_error = _run_hooks($hooks->{before_request}, $context);
-        die _hook_error($hook_error, $method, $url) if $hook_error;
+        die _hook_error($hook_error, $method, $url) if defined $hook_error;
         my $context_method_ref = ref($context->{method});
         die "method must be a non-empty scalar\n"
             if !defined($context->{method}) || $context_method_ref ne '' || $context->{method} eq '';
@@ -220,9 +220,9 @@ sub request {
         );
 
         $context->{elapsed} = $elapsed;
-        $context->{request_id} = $response
+        $context->{request_id} = defined($response)
             ? $response->request_id
-            : $error ? $error->request_id : undef;
+            : defined($error) ? $error->request_id : undef;
 
         if ($response) {
             my $after_error = _run_hooks(
@@ -234,7 +234,7 @@ sub request {
                 $after_error,
                 $context->{method},
                 $context->{url},
-            ) if $after_error;
+            ) if defined $after_error;
             return $response;
         }
 
@@ -243,7 +243,7 @@ sub request {
             $on_error_error,
             $context->{method},
             $context->{url},
-        ) if $on_error_error;
+        ) if defined $on_error_error;
 
         die $error if $attempt >= $attempts || !$error->retryable;
 
