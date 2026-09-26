@@ -288,13 +288,13 @@ sub _request_once {
     if (ref($raw) ne 'HASH'
         || !exists($raw->{status})
         || !defined($raw->{status})
-        || ref($raw->{status})
+        || ref($raw->{status}) ne ''
         || $raw->{status} !~ /\A\d{3}\z/
         || $raw->{status} < 100
         || $raw->{status} > 599
         || (defined($raw->{headers}) && ref($raw->{headers}) ne 'HASH')
-        || (defined($raw->{reason}) && ref($raw->{reason}))
-        || (defined($raw->{content}) && ref($raw->{content}))) {
+        || (defined($raw->{reason}) && ref($raw->{reason}) ne '')
+        || (defined($raw->{content}) && ref($raw->{content}) ne '')) {
         my $elapsed = time - $started_at;
         return (undef, HTTP::API::Core::Error->new(
             category  => 'transport',
