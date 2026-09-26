@@ -38,12 +38,12 @@ sub retry_after { $_[0]->{retry_after} }
 sub elapsed     { $_[0]->{elapsed} }
 sub request_id  { $_[0]->{request_id} }
 sub response    { $_[0]->{response} }
-sub body        { $_[0]->{response} ? $_[0]->{response}->content : undef }
-sub text        { $_[0]->{response} ? $_[0]->{response}->text : undef }
-sub headers     { $_[0]->{response} ? $_[0]->{response}->headers : {} }
-sub header      { $_[0]->{response} ? $_[0]->{response}->header($_[1]) : undef }
-sub json        { $_[0]->{response} ? $_[0]->{response}->json : undef }
-sub rate_limit  { $_[0]->{response} ? $_[0]->{response}->rate_limit : undef }
+sub body        { defined($_[0]->{response}) ? $_[0]->{response}->content : undef }
+sub text        { defined($_[0]->{response}) ? $_[0]->{response}->text : undef }
+sub headers     { defined($_[0]->{response}) ? $_[0]->{response}->headers : {} }
+sub header      { defined($_[0]->{response}) ? $_[0]->{response}->header($_[1]) : undef }
+sub json        { defined($_[0]->{response}) ? $_[0]->{response}->json : undef }
+sub rate_limit  { defined($_[0]->{response}) ? $_[0]->{response}->rate_limit : undef }
 sub as_string   { defined($_[0]->{message}) ? $_[0]->{message} : 'HTTP API core error' }
 
 1;
