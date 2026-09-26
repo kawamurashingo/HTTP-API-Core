@@ -187,14 +187,16 @@ sub request {
 
         my $hook_error = _run_hooks($hooks->{before_request}, $context);
         die _hook_error($hook_error, $method, $url) if $hook_error;
+        my $context_method_ref = ref($context->{method});
         die "method must be a non-empty scalar\n"
-            if !defined($context->{method}) || ref($context->{method}) || $context->{method} eq '';
+            if !defined($context->{method}) || $context_method_ref ne '' || $context->{method} eq '';
         _validate_request_url($context->{url});
         die "headers must be a hash reference\n"
             if ref($context->{headers}) ne 'HASH';
         _validate_header_values($context->{headers});
+        my $context_content_ref = ref($context->{content});
         die "content must be a scalar or undef\n"
-            if defined($context->{content}) && ref($context->{content});
+            if defined($context->{content}) && $context_content_ref ne '';
 
         my $started_at = time;
         $context->{started_at} = $started_at;
@@ -550,8 +552,9 @@ sub _uri_escape {
 
 sub _validate_request_url {
     my ($url) = @_;
+    my $url_ref = ref($url);
     die "url must be a non-empty scalar\n"
-        if !defined($url) || ref($url) || $url eq '';
+        if !defined($url) || $url_ref ne '' || $url eq '';
     die "url must be an absolute HTTP(S) URL\n"
         if $url !~ m{\Ahttps?://(?:[^/?#\s@]+@)?(?:\[[0-9A-Fa-f:.]+\]|[^/?#\s:@]+)(?::\d+)?(?:[/?#]|\z)}i;
 }
