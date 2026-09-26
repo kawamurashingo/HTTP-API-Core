@@ -5,6 +5,7 @@ use warnings;
 
 sub new {
     my $class = shift;
+    die "pagination options must be key/value pairs\n" if @_ % 2;
     die "pagination option names must be scalars\n"
         if grep { ref($_) ne '' } @_[ grep { $_ % 2 == 0 } 0 .. $#_ ];
     my %args = @_;
