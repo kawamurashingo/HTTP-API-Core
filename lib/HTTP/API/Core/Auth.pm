@@ -31,6 +31,8 @@ sub basic_auth {
 }
 
 sub api_key_auth {
+    die "api_key auth option names must be scalars\n"
+        if grep { ref($_) ne '' } @_[ grep { $_ % 2 == 0 } 0 .. $#_ ];
     my (%args) = @_;
     my $in = delete($args{in}) // 'header';
     my $name = delete $args{name};
