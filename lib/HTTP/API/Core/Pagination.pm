@@ -9,10 +9,8 @@ sub new {
     die "client is required\n" if !exists $args{client} || !defined $args{client};
     my $client = delete $args{client};
     my $client_class = blessed($client);
-    die "client must be an object with request() and base_url()\n"
-        if !defined($client_class)
-        || !$client->can('request')
-        || !$client->can('base_url');
+    die "client must be an object with request()\n"
+        if !defined($client_class) || !$client->can('request');
     my $path   = delete $args{path};
     die "path is required\n" if !defined $path;
     die "path must be a scalar\n" if ref($path) ne '';
