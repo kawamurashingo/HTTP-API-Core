@@ -25,10 +25,6 @@ dies_like(
     'constructor rejects reference-valued base_url',
 );
 
-{
-    package 0;
-}
-
 my $false_ref_base_url = bless {}, '0';
 dies_like(
     sub { HTTP::API::Core->new(base_url => $false_ref_base_url) },
