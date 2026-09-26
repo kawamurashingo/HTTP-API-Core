@@ -572,6 +572,8 @@ sub _validate_request_url {
 
 sub _validate_header_values {
     my ($headers) = @_;
+    die "header names must be scalars\n"
+        if grep { ref($_) ne '' } keys %$headers;
     die "header values must be scalars or undef\n"
         if grep { defined($_) && ref($_) ne '' } values %$headers;
 }
