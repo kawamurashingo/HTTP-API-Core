@@ -85,10 +85,13 @@ sub paginate {
 
 sub request {
     my ($self, $method, $path, %opts) = @_;
-    die "method is required\n" if !defined($method) || (!ref($method) && $method eq '');
-    die "method must be a non-empty scalar\n" if ref($method);
+    my $method_ref = ref($method);
+    die "method is required\n"
+        if !defined($method) || ($method_ref eq '' && $method eq '');
+    die "method must be a non-empty scalar\n" if $method_ref ne '';
     die "path is required\n" if !defined $path;
-    die "path must be a scalar\n" if ref($path);
+    my $path_ref = ref($path);
+    die "path must be a scalar\n" if $path_ref ne '';
     $method = uc($method);
 
     my $url = $path =~ m{\Ahttps?://} ? $path : $self->_join_url($path);
