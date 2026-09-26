@@ -157,11 +157,15 @@ sub request {
     }
 
     my $retry = exists $opts{retry} ? delete($opts{retry}) : $self->{retry};
-    if (ref($retry) eq 'HASH' && $retry != $self->{retry}) {
+    my $retry_ref = ref($retry);
+    if ($retry_ref eq 'HASH' && $retry != $self->{retry}) {
         $retry = _normalize_retry($retry);
     }
-    elsif (!ref($retry)) {
+    elsif ($retry_ref eq '') {
         $retry = $retry ? $self->{retry} : _normalize_retry({ attempts => 1 });
+    }
+    elsif ($retry_ref ne 'HASH') {
+        die "retry must be a hash reference or scalar switch\n";
     }
 
     my $request_hooks = exists $opts{hooks}
