@@ -518,10 +518,10 @@ sub _append_query {
         my @values;
         if (ref($value) eq 'ARRAY') {
             die "query parameter array values must contain only scalars or undef\n"
-                if grep { defined($_) && ref($_) } @$value;
+                if grep { defined($_) && ref($_) ne '' } @$value;
             @values = grep { defined $_ } @$value;
         }
-        elsif (ref($value)) {
+        elsif (ref($value) ne '') {
             die "query values must be scalars, array references, or undef\n";
         }
         else {
@@ -564,7 +564,7 @@ sub _validate_request_url {
 sub _validate_header_values {
     my ($headers) = @_;
     die "header values must be scalars or undef\n"
-        if grep { defined($_) && ref($_) } values %$headers;
+        if grep { defined($_) && ref($_) ne '' } values %$headers;
 }
 
 sub _set_header_if_absent {
