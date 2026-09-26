@@ -68,6 +68,7 @@ sub new {
         if defined($self->{page_size}) && (ref($self->{page_size}) ne '' || $self->{page_size} !~ /\A\d+\z/ || $self->{page_size} < 1);
     die "start_page must be a positive integer\n"
         if ref($self->{current_page}) ne '' || $self->{current_page} !~ /\A\d+\z/ || $self->{current_page} < 1;
+    die "pagination option names must be scalars\n" if grep { ref($_) ne '' } keys %args;
     die "unknown pagination option: $_\n" for sort keys %args;
 
     return $self;
