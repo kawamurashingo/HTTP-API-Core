@@ -184,6 +184,13 @@ dies_like(
     'constructor rejects reference-valued timeout',
 );
 
+my $false_ref_timeout = bless {}, '0';
+dies_like(
+    sub { HTTP::API::Core->new(base_url => 'https://api.example.test', timeout => $false_ref_timeout) },
+    qr/timeout must be a positive number/,
+    'constructor rejects false-valued reference timeout before coercion',
+);
+
 
 dies_like(
     sub { $request_api->request({}, '/x') },
