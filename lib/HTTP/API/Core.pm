@@ -18,8 +18,10 @@ sub new {
     my ($class, %args) = @_;
 
     my $base_url = delete $args{base_url};
-    die "base_url is required\n" if !defined($base_url) || (!ref($base_url) && $base_url eq '');
-    die "base_url must be a non-empty scalar\n" if ref($base_url);
+    my $base_url_ref = ref($base_url);
+    die "base_url is required\n"
+        if !defined($base_url) || ($base_url_ref eq '' && $base_url eq '');
+    die "base_url must be a non-empty scalar\n" if $base_url_ref ne '';
     $base_url =~ s{/+\z}{};
 
     my $headers = delete($args{headers}) || {};
