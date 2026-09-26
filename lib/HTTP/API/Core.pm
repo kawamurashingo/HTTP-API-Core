@@ -401,7 +401,7 @@ sub _merge_hooks {
 
 sub _run_hooks {
     my ($callbacks, @args) = @_;
-    for my $callback (@{ $callbacks || [] }) {
+    for my $callback (@{ defined($callbacks) ? $callbacks : [] }) {
         my $ok = eval { $callback->(@args); 1 };
         return $@ if !$ok;
     }
