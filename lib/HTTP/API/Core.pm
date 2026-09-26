@@ -29,9 +29,10 @@ sub new {
     _validate_header_values($headers);
 
     my $timeout = exists $args{timeout} ? delete($args{timeout}) : 10;
+    my $timeout_ref = ref($timeout);
     die "timeout must be a positive number\n"
         if !defined($timeout)
-        || ref($timeout)
+        || $timeout_ref ne ''
         || $timeout !~ /\A(?:\d+(?:\.\d*)?|\.\d+)\z/
         || $timeout <= 0;
 
