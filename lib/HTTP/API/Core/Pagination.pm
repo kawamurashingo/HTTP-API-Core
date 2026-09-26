@@ -5,7 +5,8 @@ use warnings;
 
 sub new {
     my ($class, %args) = @_;
-    my $client = delete $args{client} or die "client is required\n";
+    die "client is required\n" if !exists $args{client} || !defined $args{client};
+    my $client = delete $args{client};
     my $path   = delete $args{path};
     die "path is required\n" if !defined $path;
     die "path must be a scalar\n" if ref($path) ne '';
