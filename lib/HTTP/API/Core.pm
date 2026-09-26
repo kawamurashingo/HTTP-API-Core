@@ -276,8 +276,9 @@ sub _request_once {
         1;
     } or do {
         my $cause = $@;
+        my $cause_class = blessed($cause);
         return (undef, $cause, time - $started_at)
-            if blessed($cause) && $cause->isa('HTTP::API::Core::Error');
+            if defined($cause_class) && $cause->isa('HTTP::API::Core::Error');
 
         my $elapsed = time - $started_at;
         return (undef, HTTP::API::Core::Error->new(
@@ -400,7 +401,8 @@ sub _run_hooks {
 
 sub _hook_error {
     my ($cause, $method, $url) = @_;
-    return $cause if blessed($cause) && $cause->isa('HTTP::API::Core::Error');
+    my $cause_class = blessed($cause);
+    return $cause if defined($cause_class) && $cause->isa('HTTP::API::Core::Error');
     return HTTP::API::Core::Error->new(
         category  => 'hook',
         method    => $method,
