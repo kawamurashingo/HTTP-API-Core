@@ -8,10 +8,10 @@ sub new {
     my $client = delete $args{client} or die "client is required\n";
     my $path   = delete $args{path};
     die "path is required\n" if !defined $path;
-    die "path must be a scalar\n" if ref($path);
+    die "path must be a scalar\n" if ref($path) ne '';
 
     my $mode = delete($args{mode});
-    die "mode must be a scalar\n" if ref($mode);
+    die "mode must be a scalar\n" if ref($mode) ne '';
     $mode = 'next_url' if !defined($mode) || $mode eq '';
     die "unsupported pagination mode: $mode\n"
         if $mode ne 'next_url' && $mode ne 'page' && $mode ne 'cursor';
@@ -45,9 +45,9 @@ sub new {
     die "query must be a hash reference\n" if ref($self->{query}) ne 'HASH';
     die "request must be a hash reference\n" if ref($self->{request}) ne 'HASH';
     die "page_size must be a positive integer\n"
-        if defined($self->{page_size}) && (ref($self->{page_size}) || $self->{page_size} !~ /\A\d+\z/ || $self->{page_size} < 1);
+        if defined($self->{page_size}) && (ref($self->{page_size}) ne '' || $self->{page_size} !~ /\A\d+\z/ || $self->{page_size} < 1);
     die "start_page must be a positive integer\n"
-        if ref($self->{current_page}) || $self->{current_page} !~ /\A\d+\z/ || $self->{current_page} < 1;
+        if ref($self->{current_page}) ne '' || $self->{current_page} !~ /\A\d+\z/ || $self->{current_page} < 1;
     die "unknown pagination option: $_\n" for sort keys %args;
 
     return $self;
@@ -86,7 +86,7 @@ sub _fetch_page {
 
     if ($self->{mode} eq 'next_url') {
         my $next = _extract($data, $self->{next}, $response, $self->{response_aware_extractors});
-        die "pagination next URL continuation must be a scalar\n" if defined($next) && ref($next);
+        die "pagination next URL continuation must be a scalar\n" if defined($next) && ref($next) ne '';
         if (!defined($next) || $next eq '') {
             $self->{finished} = 1;
         }
@@ -98,7 +98,7 @@ sub _fetch_page {
     }
     elsif ($self->{mode} eq 'cursor') {
         my $next = _extract($data, $self->{next}, $response, $self->{response_aware_extractors});
-        die "pagination cursor continuation must be a scalar\n" if defined($next) && ref($next);
+        die "pagination cursor continuation must be a scalar\n" if defined($next) && ref($next) ne '';
         if (!defined($next) || $next eq '') {
             $self->{finished} = 1;
         }
@@ -198,10 +198,10 @@ sub _append_query {
         my @values;
         if (ref($value) eq 'ARRAY') {
             die "query parameter array values must contain only scalars or undef\n"
-                if grep { defined($_) && ref($_) } @$value;
+                if grep { defined($_) && ref($_) ne '' } @$value;
             @values = grep { defined $_ } @$value;
         }
-        elsif (ref($value)) {
+        elsif (ref($value) ne '') {
             die "query values must be scalars, array references, or undef\n";
         }
         else {
