@@ -91,6 +91,7 @@ sub paginate {
 
 sub request {
     my ($self, $method, $path) = splice @_, 0, 3;
+    die "request options must be key/value pairs\n" if @_ % 2;
     die "request option names must be scalars\n"
         if grep { ref($_) ne '' } @_[ grep { $_ % 2 == 0 } 0 .. $#_ ];
     my %opts = @_;
