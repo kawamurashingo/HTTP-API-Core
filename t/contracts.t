@@ -197,4 +197,18 @@ dies_like(
     'request rejects reference-valued path',
 );
 
+my $false_ref_method = bless {}, '0';
+dies_like(
+    sub { $request_api->request($false_ref_method, '/x') },
+    qr/method must be a non-empty scalar/,
+    'request rejects false-valued reference method before coercion',
+);
+
+my $false_ref_path = bless {}, '0';
+dies_like(
+    sub { $request_api->request('GET', $false_ref_path) },
+    qr/path must be a scalar/,
+    'request rejects false-valued reference path before coercion',
+);
+
 done_testing;
