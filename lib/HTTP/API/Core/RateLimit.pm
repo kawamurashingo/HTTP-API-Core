@@ -5,7 +5,10 @@ use warnings;
 use Time::HiRes qw(time);
 
 sub new {
-    my ($class, %args) = @_;
+    my $class = shift;
+    die "constructor option names must be scalars\n"
+        if grep { ref($_) ne '' } @_[ grep { $_ % 2 == 0 } 0 .. $#_ ];
+    my %args = @_;
 
     for my $name (qw(limit remaining used reset reset_epoch retry_after)) {
         die "rate-limit $name must be a non-negative number or undef\n"

@@ -7,7 +7,10 @@ use HTTP::API::Core::Error;
 use HTTP::API::Core::RateLimit;
 
 sub new {
-    my ($class, %args) = @_;
+    my $class = shift;
+    die "constructor option names must be scalars\n"
+        if grep { ref($_) ne '' } @_[ grep { $_ % 2 == 0 } 0 .. $#_ ];
+    my %args = @_;
 
     die "response status must be a valid HTTP status\n"
         if !defined($args{status})
