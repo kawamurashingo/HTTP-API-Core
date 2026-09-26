@@ -418,6 +418,7 @@ sub _hook_error {
 sub _normalize_retry {
     my ($retry) = @_;
     my %copy = %$retry;
+    die "retry option names must be scalars\n" if grep { ref($_) ne '' } keys %copy;
 
     my $attempts = exists $copy{attempts} ? delete($copy{attempts}) : 3;
     my $attempts_ref = ref($attempts);
