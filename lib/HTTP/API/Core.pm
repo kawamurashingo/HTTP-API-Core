@@ -392,8 +392,8 @@ sub _merge_hooks {
     return {
         map {
             $_ => [
-                @{ $first->{$_} || [] },
-                @{ $second->{$_} || [] },
+                @{ defined($first->{$_}) ? $first->{$_} : [] },
+                @{ defined($second->{$_}) ? $second->{$_} : [] },
             ]
         } qw(before_request after_response on_error)
     };
