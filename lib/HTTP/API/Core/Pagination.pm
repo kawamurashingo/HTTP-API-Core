@@ -19,6 +19,13 @@ sub new {
     my $items = delete($args{items});
     $items = 'items' if !defined $items;
 
+    my $response_aware_extractors = delete($args{response_aware_extractors});
+    die "response_aware_extractors must be a scalar\n"
+        if defined($response_aware_extractors) && ref($response_aware_extractors) ne '';
+    my $allow_cross_origin = delete($args{allow_cross_origin});
+    die "allow_cross_origin must be a scalar\n"
+        if defined($allow_cross_origin) && ref($allow_cross_origin) ne '';
+
     my $self = bless {
         client          => $client,
         path            => $path,
@@ -26,8 +33,8 @@ sub new {
         items           => $items,
         next            => exists($args{next}) ? delete($args{next}) : ($mode eq 'cursor' ? 'next_cursor' : 'next'),
         has_more        => delete($args{has_more}),
-        response_aware_extractors => delete($args{response_aware_extractors}) ? 1 : 0,
-        allow_cross_origin => delete($args{allow_cross_origin}) ? 1 : 0,
+        response_aware_extractors => $response_aware_extractors ? 1 : 0,
+        allow_cross_origin => $allow_cross_origin ? 1 : 0,
         page_param      => delete($args{page_param}) || 'page',
         page_size_param => delete($args{page_size_param}) || 'per_page',
         page_size       => delete($args{page_size}),
@@ -52,6 +59,8 @@ sub new {
             if !defined($self->{$name}) || ref($self->{$name}) ne '' || $self->{$name} eq '';
     }
 
+    die "cursor must be a scalar or undef\n"
+        if defined($self->{cursor}) && ref($self->{cursor}) ne '';
     die "query must be a hash reference\n" if ref($self->{query}) ne 'HASH';
     die "request must be a hash reference\n" if ref($self->{request}) ne 'HASH';
     die "page_size must be a positive integer\n"
