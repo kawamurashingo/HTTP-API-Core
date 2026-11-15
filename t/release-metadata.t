@@ -2,6 +2,7 @@ use strict;
 use warnings;
 use Test::More;
 use File::Find ();
+use ExtUtils::Manifest qw(maniread);
 
 my $makefile = do {
     open my $fh, '<', 'Makefile.PL' or die "cannot open Makefile.PL: $!";
@@ -14,8 +15,7 @@ like $makefile, qr/LICENSE\s*=>\s*'perl_5'/, 'distribution license is declared';
 like $makefile, qr/MIN_PERL_VERSION\s*=>\s*'5\.010'/, 'minimum Perl version is declared';
 like $makefile, qr{https://github\.com/kawamurashingo/HTTP-API-Core}, 'repository metadata is declared';
 
-open my $manifest_fh, '<', 'MANIFEST' or die "cannot open MANIFEST: $!";
-my %manifest = map { chomp; $_ => 1 } <$manifest_fh>;
+my %manifest = %{ maniread('MANIFEST') };
 ok $manifest{'docs/RELEASING.md'}, 'release guide ships in the distribution';
 
 # The tarball must carry its legal and support information.
