@@ -8,8 +8,9 @@ This document is the release checklist for maintainers. The goal is to make a re
 2. Confirm the GitHub Actions Perl matrix is green.
 3. Run the full distribution test suite locally with `perl Makefile.PL && make test` when possible.
 4. Review `Changes` and make sure every user-visible behavior change since the previous release is represented.
-5. Confirm `MANIFEST` contains every file intended for the distribution.
-6. Review the public compatibility documents under `docs/`, especially `COMPATIBILITY.md`.
+5. Confirm `MANIFEST` includes `LICENSE`, `CONTRIBUTING.md`, `SECURITY.md`, and every library module, test, document, and example intended for the distribution.
+6. Run `make disttest` to verify the suite against a freshly assembled distribution directory (CI exercises this on Perl 5.40).
+7. Review the public compatibility documents under `docs/`, especially `COMPATIBILITY.md`.
 
 For a major release such as 1.00, also confirm that every interface listed under the 1.0 criteria in `DESIGN.md` has explicit documentation and regression coverage.
 
