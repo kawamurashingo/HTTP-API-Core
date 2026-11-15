@@ -34,7 +34,7 @@ The `content` option is omitted entirely when the request has no body. It is pre
 
 A transport must return a hash reference with:
 
-- `status` — required three-digit HTTP status in the `100`-`599` range
+- `status` — required three-digit HTTP status in the `100`-`599` range, using ASCII digits (`0`–`9`)
 - `reason` — optional scalar reason phrase
 - `headers` — optional hash reference of response headers
 - `content` — optional scalar raw response body
