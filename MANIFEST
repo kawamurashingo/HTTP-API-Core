@@ -68,6 +68,7 @@ t/release-metadata.t
 t/release-version.t
 t/response.t
 t/retry-after-weekday.t
+t/retry-after-year.t
 t/retry-contract.t
 t/retry-method-mutation.t
 t/retry-undefined-attempts.t
