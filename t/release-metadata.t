@@ -16,11 +16,11 @@ like $makefile, qr/MIN_PERL_VERSION\s*=>\s*'5\.010'/, 'minimum Perl version is d
 like $makefile, qr{https://github\.com/kawamurashingo/HTTP-API-Core}, 'repository metadata is declared';
 
 my %manifest = %{ maniread('MANIFEST') };
-ok $manifest{'docs/RELEASING.md'}, 'release guide ships in the distribution';
+ok exists($manifest{'docs/RELEASING.md'}), 'release guide ships in the distribution';
 
 # The tarball must carry its legal and support information.
 for my $required (qw(LICENSE CONTRIBUTING.md SECURITY.md)) {
-    ok $manifest{$required}, "$required is included in the distribution";
+    ok exists($manifest{$required}), "$required is included in the distribution";
 }
 
 # Catch stale entries and source files forgotten in MANIFEST before publishing.
@@ -41,7 +41,7 @@ File::Find::find({
 }, qw(lib t docs examples));
 
 for my $path (sort @source_files) {
-    ok $manifest{$path}, "source file is included in MANIFEST: $path";
+    ok exists($manifest{$path}), "source file is included in MANIFEST: $path";
 }
 
 ok -f 'docs/COMPATIBILITY.md', 'compatibility policy is present';
