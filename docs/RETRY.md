@@ -47,7 +47,7 @@ The delay before another attempt is chosen in this order:
 2. exhausted rate-limit reset metadata
 3. exponential backoff
 
-HTTP-date values use the IMF-fixdate form (for example, `Wed, 21 Oct 2015 07:28:00 GMT`). The weekday must match the calendar date; a mismatched weekday makes the header invalid. Valid dates in the past produce a zero-second delay. Malformed values are ignored so the existing rate-limit reset or exponential-backoff fallback can be used.
+HTTP-date values use the IMF-fixdate form (for example, `Wed, 21 Oct 2015 07:28:00 GMT`). The weekday must match the calendar date, and the converted UTC year must match the literal four-digit year in the header; a mismatch makes the header invalid. This also avoids treating historical years as future dates due to `Time::Local` year interpretation. Valid dates in the past produce a zero-second delay. Malformed values are ignored so the existing rate-limit reset or exponential-backoff fallback can be used.
 
 Exponential backoff starts at `base_delay`, doubles after each failed attempt, and is capped at `max_delay`.
 
