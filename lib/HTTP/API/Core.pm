@@ -205,6 +205,9 @@ sub request {
         my $context_method_ref = ref($context->{method});
         die "method must be a non-empty scalar\n"
             if !defined($context->{method}) || $context_method_ref ne '' || $context->{method} eq '';
+        # Hooks may supply a different method spelling. Normalize the actual
+        # dispatched method before transport, metadata, and retry decisions.
+        $context->{method} = uc($context->{method});
         _validate_request_url($context->{url});
         die "headers must be a hash reference\n"
             if ref($context->{headers}) ne 'HASH';
