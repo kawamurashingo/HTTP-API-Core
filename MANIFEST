@@ -38,6 +38,7 @@ t/00-load.t
 t/auth-contract.t
 t/auth-helpers.t
 t/auth-placement.t
+t/auth-query-equivalent.t
 t/auth-query-fragment.t
 t/client.t
 t/conflicting-response-headers.t
