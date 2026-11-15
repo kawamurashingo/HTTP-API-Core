@@ -37,6 +37,8 @@ A `403` is retryable only when normalized rate-limit metadata reports an exhaust
 
 A retryable error is only retried when the request method is allowed by the active retry policy.
 
+If a `before_request` hook changes the HTTP method, the **method actually sent** must also be allowed by the retry policy. For example, changing an initial `GET` to `POST` does not opt `POST` into retries. To deliberately retry a hook-mutated `POST`, configure `methods` to include both `GET` and `POST`. An `on_error` hook cannot change the retry eligibility of a method that has already been sent.
+
 ## Delays
 
 The delay before another attempt is chosen in this order:
