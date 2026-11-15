@@ -114,7 +114,9 @@ sub request {
     die "headers must be a hash reference\n" if ref($request_headers) ne 'HASH';
     _validate_header_values($request_headers);
     my %headers = %{ $self->{headers} };
-    for my $name (keys %$request_headers) {
+    # A header hash may contain multiple spellings of the same name.
+    # Matching values are safe; deterministic spelling avoids hash-order drift.
+    for my $name (sort keys %$request_headers) {
         my $wanted = lc $name;
         delete @headers{ grep { lc($_) eq $wanted } keys %headers };
         $headers{$name} = $request_headers->{$name};
@@ -600,6 +602,25 @@ sub _validate_header_values {
         if grep { ref($_) ne '' } keys %$headers;
     die "header values must be scalars or undef\n"
         if grep { defined($_) && ref($_) ne '' } values %$headers;
+
+    # Reject ambiguous case-insensitive names before sending a request.
+    # Equal values (or two undefined values) are not conflicting.
+    my %seen;
+    for my $name (sort keys %$headers) {
+        my $key = lc $name;
+        my $value = $headers->{$name};
+        if (exists $seen{$key}) {
+            my $previous = $seen{$key};
+            die "conflicting case-insensitive header values: $key\n"
+                if (defined($previous) && !defined($value))
+                || (!defined($previous) && defined($value))
+                || (defined($previous) && defined($value)
+                    && $previous ne $value);
+        }
+        else {
+            $seen{$key} = $value;
+        }
+    }
 }
 
 sub _set_header_if_absent {

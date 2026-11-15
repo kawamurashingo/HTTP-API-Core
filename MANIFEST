@@ -51,6 +51,7 @@ t/idempotency.t
 t/json-headers.t
 t/observability.t
 t/option-list-parity.t
+t/outbound-header-collisions.t
 t/pagination-atomic-state.t
 t/pagination-contract.t
 t/pagination-initial-loop.t
