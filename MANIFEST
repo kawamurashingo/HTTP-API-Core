@@ -51,6 +51,7 @@ t/json-headers.t
 t/observability.t
 t/option-list-parity.t
 t/pagination-contract.t
+t/pagination-initial-loop.t
 t/pagination.t
 t/public-api.t
 t/query.t
