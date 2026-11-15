@@ -15,6 +15,7 @@ docs/MIGRATION_FROM_HTTP_API_CLIENT.md
 docs/PAGINATION.md
 docs/RATE_LIMIT.md
 docs/REAL_API_EXAMPLES.md
+docs/REFERENCE.md
 docs/RELEASING.md
 docs/RESPONSE.md
 docs/RETRY.md
