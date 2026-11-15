@@ -313,7 +313,7 @@ sub _request_once {
         || !exists($raw->{status})
         || !defined($raw->{status})
         || ref($raw->{status}) ne ''
-        || $raw->{status} !~ /\A\d{3}\z/
+        || $raw->{status} !~ /\A[0-9]{3}\z/
         || $raw->{status} < 100
         || $raw->{status} > 599
         || (defined($raw->{headers}) && ref($raw->{headers}) ne 'HASH')
@@ -512,7 +512,7 @@ sub _retry_after_delay {
     return undef if !defined $value;
 
     return 0 + $value
-        if $value =~ /\A(?:\d+(?:\.\d*)?|\.\d+)\z/;
+        if $value =~ /\A(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)\z/;
 
     my %month = (
         Jan => 0, Feb => 1, Mar => 2, Apr => 3,
@@ -521,7 +521,7 @@ sub _retry_after_delay {
     );
 
     return undef
-        if $value !~ /\A(Mon|Tue|Wed|Thu|Fri|Sat|Sun), (\d{2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4}) (\d{2}):(\d{2}):(\d{2}) GMT\z/;
+        if $value !~ /\A(Mon|Tue|Wed|Thu|Fri|Sat|Sun), ([0-9]{2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) ([0-9]{4}) ([0-9]{2}):([0-9]{2}):([0-9]{2}) GMT\z/;
 
     my ($weekday, $day, $mon, $year, $hour, $min, $sec) =
         ($1, $2, $3, $4, $5, $6, $7);
