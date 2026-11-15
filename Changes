@@ -1,7 +1,7 @@
 Revision history for HTTP-API-Core
 
 Unreleased
-    - Include LICENSE, CONTRIBUTING.md, and SECURITY.md in the distribution.
+    - Include LICENSE, CONTRIBUTING.md, SECURITY.md, and docs/REFERENCE.md in the distribution.
     - Check MANIFEST completeness and test assembled distributions in CI.
     - Verify essential release archive files before publishing.
 
