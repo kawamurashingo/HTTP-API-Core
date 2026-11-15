@@ -211,11 +211,14 @@ sub request {
         die "content must be a scalar or undef\n"
             if defined($context->{content}) && $context_content_ref ne '';
 
+        # Hooks may change the method. Keep the actual dispatched method for
+        # retry eligibility even if on_error hooks later mutate the context.
+        my $dispatched_method = $context->{method};
         my $started_at = time;
         $context->{started_at} = $started_at;
 
         my ($response, $error, $elapsed) = $self->_request_once(
-            $context->{method},
+            $dispatched_method,
             $context->{url},
             $context->{headers},
             $context->{content},
@@ -247,7 +250,9 @@ sub request {
             $context->{url},
         ) if defined $on_error_error;
 
-        die $error if $attempt >= $attempts || !$error->retryable;
+        die $error if $attempt >= $attempts
+            || !$error->retryable
+            || !_method_is_retryable($dispatched_method, $retry);
 
         my $delay = _retry_delay($retry, $attempt, $error);
         sleep($delay) if $delay > 0;
