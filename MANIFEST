@@ -70,6 +70,7 @@ t/response.t
 t/retry-after-weekday.t
 t/retry-contract.t
 t/retry-method-mutation.t
+t/retry-undefined-attempts.t
 t/retry.t
 t/smoke.t
 t/transport-adapters.t

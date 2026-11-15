@@ -1,6 +1,7 @@
 Revision history for HTTP-API-Core
 
 Unreleased
+    - Reject undefined retry attempt counts without Perl uninitialized-value warnings.
     - Normalize before_request-mutated HTTP methods before dispatch and retry checks,
       preserving per-attempt URLs and credentials.
     - Recognize percent-encoding-equivalent and bare existing query API-key names

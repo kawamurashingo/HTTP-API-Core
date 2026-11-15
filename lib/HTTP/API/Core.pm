@@ -441,7 +441,8 @@ sub _normalize_retry {
     my $attempts = exists $copy{attempts} ? delete($copy{attempts}) : 3;
     my $attempts_ref = ref($attempts);
     die "retry attempts must be a positive integer\n"
-        if $attempts_ref ne '' || $attempts !~ /\A\d+\z/ || $attempts < 1;
+        if !defined($attempts) || $attempts_ref ne ''
+        || $attempts !~ /\A\d+\z/ || $attempts < 1;
 
     my $base_delay = exists $copy{base_delay}
         ? delete($copy{base_delay})
