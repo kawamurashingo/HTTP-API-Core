@@ -1,6 +1,8 @@
 Revision history for HTTP-API-Core
 
 Unreleased
+    - Normalize before_request-mutated HTTP methods before dispatch and retry checks,
+      preserving per-attempt URLs and credentials.
     - Recognize percent-encoding-equivalent and bare existing query API-key names
       without appending duplicate authentication parameters.
     - Reject conflicting case-insensitive outbound header values before dispatch,
