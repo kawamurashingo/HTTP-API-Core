@@ -32,10 +32,27 @@ sub new {
             if defined($args{$name}) && ref($args{$name}) ne '';
     }
 
+    # Conflicting case-insensitive header names are ambiguous. Never let
+    # hash iteration order decide which value controls retry behavior.
+    my (%normalized_headers, %conflicts);
+    for my $name (keys %$headers) {
+        my $key = lc $name;
+        my $value = $headers->{$name};
+        if (exists $normalized_headers{$key}) {
+            my $previous = $normalized_headers{$key};
+            $conflicts{$key} = 1
+                if (!defined($previous) && defined($value))
+                || (defined($previous) && !defined($value))
+                || (defined($previous) && defined($value) && $previous ne $value);
+        }
+        $normalized_headers{$key} = $value;
+    }
+    $normalized_headers{$_} = undef for keys %conflicts;
+
     return bless {
         status  => $args{status},
         reason  => $args{reason},
-        headers => { map { lc($_) => $headers->{$_} } keys %$headers },
+        headers => \%normalized_headers,
         content => defined($args{content}) ? $args{content} : '',
         method  => $args{method},
         url     => $args{url},
