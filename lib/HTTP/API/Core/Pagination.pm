@@ -106,18 +106,21 @@ sub _fetch_page {
     my $items = _extract($data, $self->{items}, $response, $self->{response_aware_extractors});
 
     die "pagination items extractor must return an array reference\n" if ref($items) ne 'ARRAY';
-    $self->{buffer} = [ @$items ];
-    $self->{started} = 1;
+
+    # Stage iterator updates until the continuation is fully validated.
+    # A failed page must not leave items in the buffer or advance the cursor.
+    my %update = (buffer => [ @$items ], started => 1);
+    my %seen = %{ $self->{seen} };
 
     # Continuations must not revisit the initial page or a supplied cursor.
     # These values were previously absent from the seen-continuation set.
     if ($first_page) {
         if ($self->{mode} eq 'next_url') {
-            $self->{seen}{"url:$url"} = 1;
+            $seen{"url:$url"} = 1;
         }
         elsif ($self->{mode} eq 'cursor'
             && defined($self->{cursor}) && $self->{cursor} ne '') {
-            $self->{seen}{"cursor:$self->{cursor}"} = 1;
+            $seen{"cursor:$self->{cursor}"} = 1;
         }
     }
 
@@ -125,23 +128,23 @@ sub _fetch_page {
         my $next = _extract($data, $self->{next}, $response, $self->{response_aware_extractors});
         die "pagination next URL continuation must be a scalar\n" if defined($next) && ref($next) ne '';
         if (!defined($next) || $next eq '') {
-            $self->{finished} = 1;
+            $update{finished} = 1;
         }
         else {
             $self->_guard_next_url_origin($next);
-            $self->_guard_continuation("url:$next");
-            $self->{path} = $next;
+            $self->_guard_continuation("url:$next", \%seen);
+            $update{path} = $next;
         }
     }
     elsif ($self->{mode} eq 'cursor') {
         my $next = _extract($data, $self->{next}, $response, $self->{response_aware_extractors});
         die "pagination cursor continuation must be a scalar\n" if defined($next) && ref($next) ne '';
         if (!defined($next) || $next eq '') {
-            $self->{finished} = 1;
+            $update{finished} = 1;
         }
         else {
-            $self->_guard_continuation("cursor:$next");
-            $self->{cursor} = $next;
+            $self->_guard_continuation("cursor:$next", \%seen);
+            $update{cursor} = $next;
         }
     }
     else {
@@ -157,14 +160,16 @@ sub _fetch_page {
         }
 
         if ($has_more) {
-            $self->{current_page}++;
+            $update{current_page} = $self->{current_page} + 1;
         }
         else {
-            $self->{finished} = 1;
+            $update{finished} = 1;
         }
     }
 
-    $self->{finished} = 1 if !@$items && $self->{mode} eq 'page' && !defined($self->{has_more});
+    $update{finished} = 1 if !@$items && $self->{mode} eq 'page' && !defined($self->{has_more});
+    $update{seen} = \%seen;
+    $self->{$_} = $update{$_} for keys %update;
 }
 
 sub _request_url {
@@ -199,8 +204,9 @@ sub _guard_next_url_origin {
 }
 
 sub _guard_continuation {
-    my ($self, $key) = @_;
-    die "pagination continuation repeated: $key\n" if $self->{seen}{$key}++;
+    my ($self, $key, $seen) = @_;
+    $seen = $self->{seen} if !defined $seen;
+    die "pagination continuation repeated: $key\n" if $seen->{$key}++;
 }
 
 sub _extract {
