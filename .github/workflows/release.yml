@@ -43,8 +43,8 @@ jobs:
             exit 1
           fi
 
-          if ! grep -Eq "^${VERSION//./\.}[[:space:]]" Changes; then
-            echo "Changes does not contain a release entry for $VERSION" >&2
+          if ! awk -v version="$VERSION" '$1 == version && NF == 2 && $2 ~ /^[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]$/ { found = 1 } END { exit !found }' Changes; then
+            echo "Changes must contain a dated release entry for $VERSION (YYYY-MM-DD)" >&2
             exit 1
           fi
 
@@ -70,9 +70,17 @@ jobs:
           set -eu
           archive="HTTP-API-Core-$VERSION.tar.gz"
           test -f "$archive"
-          for required in lib/HTTP/API/Core.pm LICENSE CONTRIBUTING.md SECURITY.md; do
+          for required in lib/HTTP/API/Core.pm LICENSE CONTRIBUTING.md SECURITY.md META.json; do
             tar -tzf "$archive" | grep -Fxq "HTTP-API-Core-$VERSION/$required"
           done
+          tar -xOzf "$archive" "HTTP-API-Core-$VERSION/META.json" |
+            perl -MJSON::PP -0777 -ne '
+              my $meta = decode_json($_);
+              die "wrong distribution name in META.json\n"
+                unless defined($meta->{name}) && $meta->{name} eq "HTTP-API-Core";
+              die "wrong distribution version in META.json\n"
+                unless defined($meta->{version}) && $meta->{version} eq $ENV{VERSION};
+            '
           echo "ARCHIVE=$archive" >> "$GITHUB_ENV"
 
       - name: Create tag
