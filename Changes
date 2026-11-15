@@ -1,5 +1,9 @@
 Revision history for HTTP-API-Core
 
+Unreleased
+    - Reject odd named-option lists in Response and RateLimit APIs before hash coercion.
+    - Test that malformed lists fail without Perl hash warnings and preserve valid behavior.
+
 1.09  2026-11-15
     - Strengthen constructor, request, authentication, and pagination validation for malformed option lists and non-scalar values.
     - Preserve false-valued references and structured errors across transport, hooks, and retry handling.
