@@ -20,7 +20,7 @@ For a major release such as 1.00, also confirm that every interface listed under
 2. Add the final version and release date to `Changes`.
 3. Regenerate or inspect generated distribution metadata after `perl Makefile.PL`.
 4. Build the distribution with `make dist`.
-5. Inspect the resulting archive contents before upload.
+5. Inspect the resulting archive contents, including `META.json` name/version, before upload. The release workflow also requires a dated `Changes` entry.
 6. Run the test suite against the release candidate archive when practical.
 
 The release commit should contain only release-specific changes. Avoid mixing new features or behavioral changes into the version bump.
