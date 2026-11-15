@@ -41,6 +41,7 @@ t/auth-query-fragment.t
 t/client.t
 t/contracts.t
 t/error-model.t
+t/false-valued-error-subclass.t
 t/form.t
 t/hooks-contract.t
 t/hooks.t
