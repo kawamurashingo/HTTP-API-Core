@@ -63,6 +63,7 @@ t/real-api-validation.t
 t/release-metadata.t
 t/release-version.t
 t/response.t
+t/retry-after-weekday.t
 t/retry-contract.t
 t/retry-method-mutation.t
 t/retry.t
