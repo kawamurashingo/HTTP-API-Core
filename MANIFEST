@@ -48,6 +48,7 @@ t/hooks.t
 t/idempotency.t
 t/json-headers.t
 t/observability.t
+t/option-list-parity.t
 t/pagination-contract.t
 t/pagination.t
 t/public-api.t
