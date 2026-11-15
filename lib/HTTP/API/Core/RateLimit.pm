@@ -41,7 +41,22 @@ sub from_headers {
         if ref($headers) ne 'HASH';
     die "rate-limit header values must be scalars or undef\n"
         if grep { defined($_) && ref($_) ne '' } values %$headers;
-    my %h = map { lc($_) => $headers->{$_} } keys %$headers;
+    # Duplicate spellings with conflicting values are ambiguous, not
+    # arbitrarily chosen according to Perl hash iteration order.
+    my (%h, %conflicts);
+    for my $name (keys %$headers) {
+        my $key = lc $name;
+        my $value = $headers->{$name};
+        if (exists $h{$key}) {
+            my $previous = $h{$key};
+            $conflicts{$key} = 1
+                if (!defined($previous) && defined($value))
+                || (defined($previous) && !defined($value))
+                || (defined($previous) && defined($value) && $previous ne $value);
+        }
+        $h{$key} = $value;
+    }
+    $h{$_} = undef for keys %conflicts;
 
     my $source = exists $h{'ratelimit-limit'} || exists $h{'ratelimit-remaining'} || exists $h{'ratelimit-reset'}
         ? 'ratelimit'
@@ -50,13 +65,13 @@ sub from_headers {
             : undef;
 
     return $class->new(
-        limit       => _number($h{'ratelimit-limit'} // $h{'x-ratelimit-limit'}),
-        remaining   => _number($h{'ratelimit-remaining'} // $h{'x-ratelimit-remaining'}),
-        used        => _number($h{'ratelimit-used'} // $h{'x-ratelimit-used'}),
+        limit       => _number(exists $h{'ratelimit-limit'} ? $h{'ratelimit-limit'} : $h{'x-ratelimit-limit'}),
+        remaining   => _number(exists $h{'ratelimit-remaining'} ? $h{'ratelimit-remaining'} : $h{'x-ratelimit-remaining'}),
+        used        => _number(exists $h{'ratelimit-used'} ? $h{'ratelimit-used'} : $h{'x-ratelimit-used'}),
         reset       => _number($h{'ratelimit-reset'}),
         reset_epoch => _number($h{'x-ratelimit-reset'}),
         retry_after => _number($h{'retry-after'}),
-        resource    => $h{'ratelimit-resource'} // $h{'x-ratelimit-resource'},
+        resource    => exists $h{'ratelimit-resource'} ? $h{'ratelimit-resource'} : $h{'x-ratelimit-resource'},
         source      => $source,
     );
 }

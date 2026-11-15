@@ -40,6 +40,7 @@ t/auth-helpers.t
 t/auth-placement.t
 t/auth-query-fragment.t
 t/client.t
+t/conflicting-response-headers.t
 t/contracts.t
 t/error-model.t
 t/false-valued-error-subclass.t
