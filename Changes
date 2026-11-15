@@ -1,6 +1,7 @@
 Revision history for HTTP-API-Core
 
 Unreleased
+    - Detect pagination continuations that repeat the initial URL or cursor before an extra request.
     - Do not retry hook-mutated unsafe HTTP methods unless explicitly permitted; preserve safe-method retries.
     - Validate API-key authentication placement before string coercion, including overloaded references.
     - Reject odd named-option lists in Response and RateLimit APIs before hash coercion.
