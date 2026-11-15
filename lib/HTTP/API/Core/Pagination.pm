@@ -100,6 +100,7 @@ sub all {
 sub _fetch_page {
     my ($self) = @_;
     my $url = $self->_request_url;
+    my $first_page = !$self->{started};
     my $response = $self->{client}->get($url, %{ $self->{request} });
     my $data = $response->json;
     my $items = _extract($data, $self->{items}, $response, $self->{response_aware_extractors});
@@ -107,6 +108,18 @@ sub _fetch_page {
     die "pagination items extractor must return an array reference\n" if ref($items) ne 'ARRAY';
     $self->{buffer} = [ @$items ];
     $self->{started} = 1;
+
+    # Continuations must not revisit the initial page or a supplied cursor.
+    # These values were previously absent from the seen-continuation set.
+    if ($first_page) {
+        if ($self->{mode} eq 'next_url') {
+            $self->{seen}{"url:$url"} = 1;
+        }
+        elsif ($self->{mode} eq 'cursor'
+            && defined($self->{cursor}) && $self->{cursor} ne '') {
+            $self->{seen}{"cursor:$self->{cursor}"} = 1;
+        }
+    }
 
     if ($self->{mode} eq 'next_url') {
         my $next = _extract($data, $self->{next}, $response, $self->{response_aware_extractors});
