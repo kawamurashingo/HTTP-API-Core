@@ -40,7 +40,8 @@ sub api_key_auth {
     my $value = delete $args{value};
     die "unknown api_key auth option: $_\n" for sort keys %args;
 
-    die "api_key in must be header or query\n" if $in ne 'header' && $in ne 'query';
+    die "api_key in must be header or query\n"
+        if ref($in) ne '' || ($in ne 'header' && $in ne 'query');
     die "api_key name must be a non-empty scalar\n"
         if !defined($name) || ref($name) ne '' || $name eq '';
     die "api_key value must be a scalar\n" if !defined($value) || ref($value) ne '';
