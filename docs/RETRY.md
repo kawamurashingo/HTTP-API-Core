@@ -80,6 +80,6 @@ $api->post('/jobs',
 
 ## Validation
 
-`attempts` must be a positive integer. `base_delay` and `max_delay` must be non-negative numbers. `methods` must be an array reference and may not contain empty values. Unknown retry options are rejected.
+`attempts` must be a defined positive integer; an explicit `undef`, zero, or non-integer value is rejected before a request is sent and without Perl uninitialized-value warnings. `base_delay` and `max_delay` must be non-negative numbers. `methods` must be an array reference and may not contain empty values. Unknown retry options are rejected.
 
 The `retry` accessor returns a defensive copy of the normalized policy so callers cannot mutate client state accidentally.
