@@ -1,6 +1,10 @@
 Revision history for HTTP-API-Core
 
-Unreleased
+1.09  2026-11-15
+    - Strengthen constructor, request, authentication, and pagination validation for malformed option lists and non-scalar values.
+    - Preserve false-valued references and structured errors across transport, hooks, and retry handling.
+    - Reject odd Error constructor arguments before hash coercion; cover warning-free failures.
+    - Add regression coverage for preserving false-valued Error subclasses from transports and hooks.
     - Include LICENSE, CONTRIBUTING.md, SECURITY.md, and docs/REFERENCE.md in the distribution.
     - Check MANIFEST completeness and test assembled distributions in CI.
     - Verify essential release archive files before publishing.
