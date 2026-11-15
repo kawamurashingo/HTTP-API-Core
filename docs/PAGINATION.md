@@ -136,7 +136,7 @@ This is the supported way to carry request-level options such as headers, retry 
 
 ## Continuation-loop protection
 
-Repeated next URLs or cursor values are rejected instead of looping forever.
+Repeated next URLs or cursor values are rejected instead of looping forever. This includes a continuation that returns to the initial requested URL (including pagination query options) or to an explicitly supplied initial cursor; the duplicate request is avoided. Detection compares the URL and cursor values directly, without URL canonicalization.
 
 A repeated continuation throws an error containing `pagination continuation repeated`.
 
