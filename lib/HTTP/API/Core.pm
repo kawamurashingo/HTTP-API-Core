@@ -515,10 +515,10 @@ sub _retry_after_delay {
     );
 
     return undef
-        if $value !~ /\A(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun), (\d{2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4}) (\d{2}):(\d{2}):(\d{2}) GMT\z/;
+        if $value !~ /\A(Mon|Tue|Wed|Thu|Fri|Sat|Sun), (\d{2}) (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) (\d{4}) (\d{2}):(\d{2}):(\d{2}) GMT\z/;
 
-    my ($day, $mon, $year, $hour, $min, $sec) =
-        ($1, $2, $3, $4, $5, $6);
+    my ($weekday, $day, $mon, $year, $hour, $min, $sec) =
+        ($1, $2, $3, $4, $5, $6, $7);
 
     return undef if $hour > 23 || $min > 59 || $sec > 60;
 
@@ -526,6 +526,14 @@ sub _retry_after_delay {
         timegm($sec, $min, $hour, $day, $month{$mon}, $year);
     };
     return undef if $@ || !defined $epoch;
+
+    # IMF-fixdate includes a weekday, which must agree with the date.
+    # Inconsistent values are malformed, so use the normal retry fallback.
+    my %weekday_number = (
+        Sun => 0, Mon => 1, Tue => 2, Wed => 3,
+        Thu => 4, Fri => 5, Sat => 6,
+    );
+    return undef if (gmtime($epoch))[6] != $weekday_number{$weekday};
 
     my $delay = $epoch - $now;
     return $delay > 0 ? $delay : 0;
