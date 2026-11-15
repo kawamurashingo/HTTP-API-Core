@@ -32,7 +32,7 @@ After the release-preparation pull request is merged and the `main` CI run is gr
 1. Choose **Run workflow** on the `release` workflow from `main`.
 2. Enter the version without the `v` prefix, for example `1.00`.
 3. The workflow verifies that the requested version matches `HTTP::API::Core::$VERSION` and that `Changes` contains the release entry.
-4. It runs the test suite, builds `HTTP-API-Core-VERSION.tar.gz`, and verifies the archive contents.
+4. It runs the test suite, builds `HTTP-API-Core-VERSION.tar.gz`, runs `make disttest` against the assembled distribution, and verifies the archive contents. Any failed packaged test stops publication before tagging.
 5. It creates and pushes the `vVERSION` tag from the exact checked-out `main` revision.
 6. It creates a GitHub Release for that tag and attaches the distribution archive.
 7. The same archive is retained as a workflow artifact.
