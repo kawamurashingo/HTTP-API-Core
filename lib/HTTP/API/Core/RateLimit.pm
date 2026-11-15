@@ -6,6 +6,7 @@ use Time::HiRes qw(time);
 
 sub new {
     my $class = shift;
+    die "rate-limit constructor options must be key/value pairs\n" if @_ % 2;
     die "constructor option names must be scalars\n"
         if grep { ref($_) ne '' } @_[ grep { $_ % 2 == 0 } 0 .. $#_ ];
     my %args = @_;
@@ -76,6 +77,7 @@ sub exhausted {
 
 sub wait_seconds {
     my $self = shift;
+    die "rate-limit wait_seconds options must be key/value pairs\n" if @_ % 2;
     die "rate-limit wait_seconds option names must be scalars\n"
         if grep { ref($_) ne '' } @_[ grep { $_ % 2 == 0 } 0 .. $#_ ];
     my %args = @_;
