@@ -1,6 +1,8 @@
 Revision history for HTTP-API-Core
 
 Unreleased
+    - Recognize percent-encoding-equivalent and bare existing query API-key names
+      without appending duplicate authentication parameters.
     - Reject conflicting case-insensitive outbound header values before dispatch,
       including default, per-request, and hook-mutated headers.
 
