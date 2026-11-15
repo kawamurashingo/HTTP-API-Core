@@ -22,7 +22,7 @@ Values are percent-encoded. Values may be scalars, array references containing o
 
 ## Request headers
 
-Client-level and per-request header values must be scalars or `undef`; reference values are rejected. Per-request `headers` must be a hash reference. They are merged over client-level default headers before idempotency handling and lifecycle hooks run. Invalid request header containers are rejected with a descriptive validation error rather than being passed to the transport. When `json` is used, `Content-Type` and `Accept` default to `application/json` only when no case-insensitive equivalent header is already present, so explicit client or request headers take precedence.
+Client-level and per-request header values must be scalars or `undef`; reference values are rejected. Per-request `headers` must be a hash reference. They are merged over client-level default headers before idempotency handling and lifecycle hooks run. Invalid request header containers are rejected with a descriptive validation error rather than being passed to the transport. Within one header set, differently cased names with **conflicting values** (including a defined value versus `undef`) are rejected before dispatch; matching values are allowed. This applies to client defaults, per-request options, and `before_request` hook mutations. Per-request headers still override defaults case-insensitively. When `json` is used, `Content-Type` and `Accept` default to `application/json` only when no case-insensitive equivalent header is already present, so explicit client or request headers take precedence.
 
 
 ## Authentication
