@@ -15,7 +15,7 @@ sub new {
         die "rate-limit $name must be a non-negative number or undef\n"
             if defined($args{$name})
             && (ref($args{$name}) ne ''
-                || $args{$name} !~ /\A(?:\d+(?:\.\d*)?|\.\d+)\z/);
+                || $args{$name} !~ /\A(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)\z/);
     }
     for my $name (qw(resource source)) {
         die "rate-limit $name must be a scalar or undef\n"
@@ -101,7 +101,7 @@ sub wait_seconds {
     die "rate-limit now must be a non-negative number\n"
         if !defined($now)
         || ref($now) ne ''
-        || $now !~ /\A(?:\d+(?:\.\d*)?|\.\d+)\z/;
+        || $now !~ /\A(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)\z/;
 
     return $self->{retry_after} if defined $self->{retry_after};
     return $self->{reset} if defined $self->{reset};
@@ -131,7 +131,7 @@ sub as_hash {
 sub _number {
     my ($value) = @_;
     return undef if !defined($value) || ref($value) ne ''
-        || $value !~ /\A(?:\d+(?:\.\d*)?|\.\d+)\z/;
+        || $value !~ /\A(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)\z/;
     return 0 + $value;
 }
 
