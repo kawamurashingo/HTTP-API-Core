@@ -1,6 +1,6 @@
 Revision history for HTTP-API-Core
 
-1.09  UNRELEASED
+1.09  2026-11-15
     - Strengthen constructor, request, authentication, and pagination validation for malformed option lists and non-scalar values.
     - Preserve false-valued references and structured errors across transport, hooks, and retry handling.
     - Reject odd Error constructor arguments before hash coercion; cover warning-free failures.
