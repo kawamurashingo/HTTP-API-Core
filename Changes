@@ -1,6 +1,7 @@
 Revision history for HTTP-API-Core
 
 Unreleased
+    - Validate API-key authentication placement before string coercion, including overloaded references.
     - Reject odd named-option lists in Response and RateLimit APIs before hash coercion.
     - Test that malformed lists fail without Perl hash warnings and preserve valid behavior.
 
