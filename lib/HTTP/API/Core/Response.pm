@@ -16,7 +16,7 @@ sub new {
     die "response status must be a valid HTTP status\n"
         if !defined($args{status})
         || ref($args{status}) ne ''
-        || $args{status} !~ /\A\d{3}\z/
+        || $args{status} !~ /\A[0-9]{3}\z/
         || $args{status} < 100
         || $args{status} > 599;
 

@@ -1,6 +1,8 @@
 Revision history for HTTP-API-Core
 
 Unreleased
+    - Require ASCII digits in HTTP statuses, Retry-After delays, and rate-limit
+      quota values to avoid Unicode numeric coercion and unintended retries.
     - Reject Retry-After HTTP-dates whose year changes during Time::Local
       conversion, avoiding incorrect long waits for historical dates.
     - Reject undefined retry attempt counts without Perl uninitialized-value warnings.
