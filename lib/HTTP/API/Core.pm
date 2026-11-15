@@ -533,13 +533,18 @@ sub _retry_after_delay {
     };
     return undef if $@ || !defined $epoch;
 
+    # Time::Local interprets some small year numbers relative to 1900 or
+    # 2000. An HTTP-date year is literal and must survive the conversion.
+    my @utc = gmtime($epoch);
+    return undef if $utc[5] + 1900 != $year;
+
     # IMF-fixdate includes a weekday, which must agree with the date.
     # Inconsistent values are malformed, so use the normal retry fallback.
     my %weekday_number = (
         Sun => 0, Mon => 1, Tue => 2, Wed => 3,
         Thu => 4, Fri => 5, Sat => 6,
     );
-    return undef if (gmtime($epoch))[6] != $weekday_number{$weekday};
+    return undef if $utc[6] != $weekday_number{$weekday};
 
     my $delay = $epoch - $now;
     return $delay > 0 ? $delay : 0;
