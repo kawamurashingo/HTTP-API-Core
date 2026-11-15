@@ -46,6 +46,7 @@ t/contracts.t
 t/error-model.t
 t/false-valued-error-subclass.t
 t/form.t
+t/hook-method-normalization.t
 t/hooks-contract.t
 t/hooks.t
 t/idempotency.t
