@@ -1,5 +1,9 @@
 Revision history for HTTP-API-Core
 
+Unreleased
+    - Reject conflicting case-insensitive outbound header values before dispatch,
+      including default, per-request, and hook-mutated headers.
+
 1.10  2026-11-15
     - Prevent automatic retries of unsafe HTTP methods introduced by before_request hooks,
       unless the method is explicitly allowed by the retry policy.
