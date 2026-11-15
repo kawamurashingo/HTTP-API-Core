@@ -37,6 +37,7 @@ lib/HTTP/API/Core/Response.pm
 t/00-load.t
 t/auth-contract.t
 t/auth-helpers.t
+t/auth-placement.t
 t/auth-query-fragment.t
 t/client.t
 t/contracts.t
