@@ -1,6 +1,7 @@
 Revision history for HTTP-API-Core
 
 Unreleased
+    - Verify release versions against dated Changes entries and test packaged release candidates before publishing.
     - Normalize conflicting case-insensitive headers to undef so contradictory quota values cannot trigger arbitrary retries.
     - Ignore Retry-After HTTP-dates with inconsistent weekdays and preserve retry-delay fallbacks.
     - Keep pagination state unchanged when a page's continuation metadata is rejected, allowing clean retries.

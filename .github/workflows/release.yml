@@ -63,6 +63,9 @@ jobs:
       - name: Build distribution
         run: make dist
 
+      - name: Test packaged distribution
+        run: make disttest
+
       - name: Verify distribution archive
         env:
           VERSION: ${{ inputs.version }}
