@@ -171,6 +171,8 @@ ending in C<+json>, such as C<application/problem+json>.
 =head2 status, reason, headers, header, method, url
 
 Provide response status and request metadata. C<headers> returns a copy.
+Case-insensitively duplicated header names with identical values are preserved;
+conflicting values become C<undef> rather than being chosen arbitrarily.
 
 =head2 elapsed
 
