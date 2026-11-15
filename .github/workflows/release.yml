@@ -70,7 +70,9 @@ jobs:
           set -eu
           archive="HTTP-API-Core-$VERSION.tar.gz"
           test -f "$archive"
-          tar -tzf "$archive" | grep -q "HTTP-API-Core-$VERSION/lib/HTTP/API/Core.pm"
+          for required in lib/HTTP/API/Core.pm LICENSE CONTRIBUTING.md SECURITY.md; do
+            tar -tzf "$archive" | grep -Fxq "HTTP-API-Core-$VERSION/$required"
+          done
           echo "ARCHIVE=$archive" >> "$GITHUB_ENV"
 
       - name: Create tag

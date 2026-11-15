@@ -1,5 +1,10 @@
 Revision history for HTTP-API-Core
 
+Unreleased
+    - Include LICENSE, CONTRIBUTING.md, SECURITY.md, and docs/REFERENCE.md in the distribution.
+    - Check MANIFEST completeness and test assembled distributions in CI.
+    - Verify essential release archive files before publishing.
+
 1.08  2026-09-23
     - Add opt-in response-aware pagination extractors for continuation metadata in response headers.
     - Update the GitHub example to follow Link-header rel=next continuation URLs.
