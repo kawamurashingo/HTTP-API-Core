@@ -1,5 +1,10 @@
 Revision history for HTTP-API-Core
 
+Unreleased
+    - Add a tested Jira Server/Data Center integration recipe demonstrating
+      simple Basic authentication and offset pagination without changing
+      generic core behavior; update the pagination POD and README examples.
+
 1.12  2026-11-21
     - Add generic offset pagination with configurable start/size parameters
       and total-based completion, advancing by the actual returned item count
