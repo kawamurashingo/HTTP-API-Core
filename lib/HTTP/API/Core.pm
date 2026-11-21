@@ -37,7 +37,7 @@ sub new {
     die "timeout must be a positive number\n"
         if !defined($timeout)
         || $timeout_ref ne ''
-        || $timeout !~ /\A(?:\d+(?:\.\d*)?|\.\d+)\z/
+        || $timeout !~ /\A(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)\z/
         || $timeout <= 0;
 
     my $transport = delete $args{transport};
@@ -462,7 +462,7 @@ sub _normalize_retry {
     my $attempts_ref = ref($attempts);
     die "retry attempts must be a positive integer\n"
         if !defined($attempts) || $attempts_ref ne ''
-        || $attempts !~ /\A\d+\z/ || $attempts < 1;
+        || $attempts !~ /\A[0-9]+\z/ || $attempts < 1;
 
     my $base_delay = exists $copy{base_delay}
         ? delete($copy{base_delay})
@@ -622,7 +622,7 @@ sub _validate_request_url {
     die "url must be a non-empty scalar\n"
         if !defined($url) || $url_ref ne '' || $url eq '';
     die "url must be an absolute HTTP(S) URL\n"
-        if $url !~ m{\Ahttps?://(?:[^/?#\s@]+@)?(?:\[[0-9A-Fa-f:.]+\]|[^/?#\s:@]+)(?::\d+)?(?:[/?#]|\z)}i;
+        if $url !~ m{\Ahttps?://(?:[^/?#\s@]+@)?(?:\[[0-9A-Fa-f:.]+\]|[^/?#\s:@]+)(?::[0-9]+)?(?:[/?#]|\z)}i;
 }
 
 # HTTP::Tiny may return array references for repeated response headers.
@@ -678,7 +678,7 @@ sub _non_negative_number {
     my ($value) = @_;
     return defined($value)
         && ref($value) eq ''
-        && $value =~ /\A(?:\d+(?:\.\d*)?|\.\d+)\z/
+        && $value =~ /\A(?:[0-9]+(?:\.[0-9]*)?|\.[0-9]+)\z/
         && $value >= 0;
 }
 

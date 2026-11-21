@@ -73,9 +73,9 @@ sub new {
     die "query must be a hash reference\n" if ref($self->{query}) ne 'HASH';
     die "request must be a hash reference\n" if ref($self->{request}) ne 'HASH';
     die "page_size must be a positive integer\n"
-        if defined($self->{page_size}) && (ref($self->{page_size}) ne '' || $self->{page_size} !~ /\A\d+\z/ || $self->{page_size} < 1);
+        if defined($self->{page_size}) && (ref($self->{page_size}) ne '' || $self->{page_size} !~ /\A[0-9]+\z/ || $self->{page_size} < 1);
     die "start_page must be a positive integer\n"
-        if ref($self->{current_page}) ne '' || $self->{current_page} !~ /\A\d+\z/ || $self->{current_page} < 1;
+        if ref($self->{current_page}) ne '' || $self->{current_page} !~ /\A[0-9]+\z/ || $self->{current_page} < 1;
     die "start_offset must be a non-negative integer\n"
         if !defined($self->{current_offset})
         || ref($self->{current_offset}) ne ''
@@ -262,7 +262,7 @@ sub _extract {
         if (ref($value) eq 'HASH') {
             $value = $value->{$part};
         }
-        elsif (ref($value) eq 'ARRAY' && $part =~ /\A\d+\z/) {
+        elsif (ref($value) eq 'ARRAY' && $part =~ /\A[0-9]+\z/) {
             $value = $value->[$part];
         }
         else {

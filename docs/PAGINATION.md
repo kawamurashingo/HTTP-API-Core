@@ -148,7 +148,7 @@ items => sub {
 }
 ```
 
-The items extractor must return an array reference. Any other value is an error.
+The items extractor must return an array reference. Any other value is an error. Numeric array indices in dotted paths use ASCII digits only; Unicode digit characters are not silently coerced to array offsets.
 
 The default items extractor is `items`.
 
@@ -192,6 +192,7 @@ The constructor rejects:
 - non-hash `request`
 - non-positive `page_size`
 - non-positive `start_page`
+- non-ASCII digits in `page_size` or `start_page`
 - invalid or negative `start_offset`
 - invalid `total` extractor type
 - unknown options

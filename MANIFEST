@@ -37,6 +37,7 @@ lib/HTTP/API/Core/RateLimit.pm
 lib/HTTP/API/Core/Response.pm
 t/00-load.t
 t/ascii-http-numeric-fields.t
+t/ascii-configuration-digits.t
 t/auth-contract.t
 t/auth-helpers.t
 t/auth-placement.t
