@@ -108,20 +108,20 @@ is $calls, 1, 'valid request reaches the transport once';
 
     package T::ASCIIPagerClient;
     sub new { bless { calls => 0 }, $_[0] }
-    sub get { $_[0]{calls}++; T::ASCIIPagerResponse->new({ rows => [[1], [2]] }) }
+    sub get { $_[0]{calls}++; T::ASCIIPagerResponse->new({ rows => [[1], [2]], next => undef }) }
 }
 
 my $client = T::ASCIIPagerClient->new;
 my $pager = HTTP::API::Core::Pagination->new(
     client => $client, path => '/items',
-    items => 'rows.1', next => undef,
+    items => 'rows.1',
 );
 is_deeply scalar($pager->all), [2],
     'ASCII numeric dotted-path index still selects the correct array entry';
 
 my $bad_pager = HTTP::API::Core::Pagination->new(
     client => $client, path => '/items',
-    items => 'rows.١', next => undef,
+    items => 'rows.١',
 );
 rejects_without_warnings(
     sub { $bad_pager->next },
