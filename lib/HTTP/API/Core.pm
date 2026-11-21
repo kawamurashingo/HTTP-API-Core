@@ -316,9 +316,7 @@ sub _request_once {
         || $raw->{status} !~ /\A[0-9]{3}\z/
         || $raw->{status} < 100
         || $raw->{status} > 599
-        || (defined($raw->{headers}) && ref($raw->{headers}) ne 'HASH')
-        || (defined($raw->{headers})
-            && grep { defined($_) && ref($_) ne '' } values %{ $raw->{headers} })
+        || !_valid_response_headers($raw->{headers})
         || (defined($raw->{reason}) && ref($raw->{reason}) ne '')
         || (defined($raw->{content}) && ref($raw->{content}) ne '')) {
         my $elapsed = time - $started_at;
@@ -603,6 +601,21 @@ sub _validate_request_url {
         if !defined($url) || $url_ref ne '' || $url eq '';
     die "url must be an absolute HTTP(S) URL\n"
         if $url !~ m{\Ahttps?://(?:[^/?#\s@]+@)?(?:\[[0-9A-Fa-f:.]+\]|[^/?#\s:@]+)(?::\d+)?(?:[/?#]|\z)}i;
+}
+
+# HTTP::Tiny may return array references for repeated response headers.
+# Request headers retain their stricter scalar-only contract.
+sub _valid_response_headers {
+    my ($headers) = @_;
+    return 1 if !defined $headers;
+    return 0 if ref($headers) ne 'HASH';
+
+    for my $value (values %$headers) {
+        next if !defined($value) || ref($value) eq '';
+        return 0 if ref($value) ne 'ARRAY';
+        return 0 if grep { defined($_) && ref($_) ne '' } @$value;
+    }
+    return 1;
 }
 
 sub _validate_header_values {
