@@ -1,6 +1,6 @@
 Revision history for HTTP-API-Core
 
-Unreleased
+1.11  2026-11-21
     - Accept HTTP::Tiny-style array-valued repeated response headers, preserving
       all Set-Cookie values and defensive copies without transport workarounds.
     - Keep header($name), retry, and rate-limit metadata scalar and conservative
