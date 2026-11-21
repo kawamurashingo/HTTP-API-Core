@@ -12,7 +12,7 @@ use HTTP::API::Core::Response;
 use HTTP::API::Core::Error;
 use HTTP::API::Core::Pagination;
 
-our $VERSION = '1.12';
+our $VERSION = '1.13';
 
 sub new {
     my $class = shift;
