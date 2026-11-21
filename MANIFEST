@@ -47,6 +47,7 @@ t/conflicting-response-headers.t
 t/contracts.t
 t/error-model.t
 t/false-valued-error-subclass.t
+t/http-tiny-internal-exception.t
 t/form.t
 t/hook-method-normalization.t
 t/hooks-contract.t

@@ -56,6 +56,12 @@ return {
 
 A transport may throw an exception for connection, TLS, timeout, DNS, or other transport failures. Ordinary exceptions are normalized into `HTTP::API::Core::Error` with `category => 'transport'` and participate in the configured retry policy.
 
+The built-in `HTTP::Tiny` transport represents such failures using a
+pseudo-response (`599 Internal Exception`). The core maps this specific
+built-in sentinel to the same structured `transport` category. Custom
+transports remain free to return an actual HTTP status `599`, which is
+handled as an HTTP error unless the transport throws an exception.
+
 If a transport throws an existing `HTTP::API::Core::Error`, that structured error is preserved rather than wrapped again.
 
 Returning a non-hash value, a hash without `status`, a hash with an invalid status value, a response whose defined `headers` value is not a hash reference, a response with unsupported nested reference header values, or a response whose defined `reason`/`content` value is a reference is normalized into a retryable structured `transport` error.
