@@ -166,7 +166,7 @@ use lib 'examples';
 use HTTP::API::Core::Example::Jira;
 
 my $jira = HTTP::API::Core::Example::Jira->new(
-    base_url => 'https://jira.example.com',
+    base_url => 'https://jira.example.com/jira',
     username => $ENV{JIRA_USERNAME},
     password => $ENV{JIRA_PASSWORD},
 );
@@ -181,6 +181,11 @@ while (my $issue = $pager->next) {
     print "$issue->{key}\n";
 }
 ```
+
+Set `base_url` to the Jira installation root. For an installation hosted at the
+domain root, use `https://jira.example.com`; if Jira is hosted under a
+context path such as `/jira`, include it in `base_url`. The example appends
+only `/rest/api/2/search` to this base URL.
 
 The example wraps the existing `basic_auth` helper and generic `offset`
 paginator. It is a recipe under `examples/`, not a separately installable Jira
