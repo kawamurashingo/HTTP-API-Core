@@ -330,6 +330,28 @@ sub _request_once {
         ), $elapsed);
     }
 
+    # HTTP::Tiny reports socket, TLS, DNS, and timeout failures as a
+    # pseudo-response instead of throwing. Do not treat that sentinel as
+    # an actual HTTP 599 response from the server. Custom transports
+    # keep their own documented response/status contract.
+    if (!defined($self->{transport})
+        && $raw->{status} == 599
+        && defined($raw->{reason})
+        && $raw->{reason} eq 'Internal Exception') {
+        my $elapsed = time - $started_at;
+        my $cause = defined($raw->{content}) && length($raw->{content})
+            ? $raw->{content}
+            : $raw->{reason};
+        return (undef, HTTP::API::Core::Error->new(
+            category  => 'transport',
+            method    => $method,
+            url       => $url,
+            retryable => 1,
+            elapsed   => $elapsed,
+            message   => "HTTP::Tiny transport failed: $cause",
+        ), $elapsed);
+    }
+
     my $elapsed = time - $started_at;
     my $response = HTTP::API::Core::Response->new(
         status  => 0 + $raw->{status},
