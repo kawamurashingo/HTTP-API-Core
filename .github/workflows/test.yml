@@ -50,14 +50,10 @@ jobs:
 
       - name: Verify tests ignore invalid ambient proxies
         if: matrix.perl == '5.40'
-        env:
-          http_proxy: invalid-proxy
-          https_proxy: invalid-proxy
-          HTTP_PROXY: invalid-proxy
-          HTTPS_PROXY: invalid-proxy
-          all_proxy: invalid-proxy
-          ALL_PROXY: invalid-proxy
-        run: make test
+        run: |
+          env http_proxy=invalid-proxy https_proxy=invalid-proxy \
+            HTTP_PROXY=invalid-proxy HTTPS_PROXY=invalid-proxy \
+            all_proxy=invalid-proxy ALL_PROXY=invalid-proxy make test
 
       - name: Test packaged distribution
         if: matrix.perl == '5.40'
