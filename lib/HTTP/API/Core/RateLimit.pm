@@ -39,14 +39,18 @@ sub from_headers {
     $headers = {} if !defined $headers;
     die "rate-limit headers must be a hash reference\n"
         if ref($headers) ne 'HASH';
-    die "rate-limit header values must be scalars or undef\n"
-        if grep { defined($_) && ref($_) ne '' } values %$headers;
+    for my $value (values %$headers) {
+        next if !defined($value) || ref($value) eq '';
+        die "rate-limit header values must be scalars, arrays of scalars, or undef\n"
+            if ref($value) ne 'ARRAY'
+            || grep { defined($_) && ref($_) ne '' } @$value;
+    }
     # Duplicate spellings with conflicting values are ambiguous, not
     # arbitrarily chosen according to Perl hash iteration order.
     my (%h, %conflicts);
     for my $name (keys %$headers) {
         my $key = lc $name;
-        my $value = $headers->{$name};
+        my $value = _scalar_header_value($headers->{$name});
         if (exists $h{$key}) {
             my $previous = $h{$key};
             $conflicts{$key} = 1
@@ -126,6 +130,20 @@ sub as_hash {
         resource    => $self->{resource},
         source      => $self->{source},
     };
+}
+
+# Conflicting repetitions are ambiguous; never choose a value for retry policy.
+sub _scalar_header_value {
+    my ($value) = @_;
+    return $value if ref($value) ne 'ARRAY';
+    return undef if !@$value;
+
+    my $first = $value->[0];
+    for my $item (@$value) {
+        return undef if defined($first) != defined($item);
+        return undef if defined($first) && $first ne $item;
+    }
+    return $first;
 }
 
 sub _number {

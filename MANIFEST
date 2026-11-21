@@ -68,6 +68,7 @@ t/real-api-validation.t
 t/release-metadata.t
 t/release-version.t
 t/response.t
+t/repeated-response-headers.t
 t/retry-after-weekday.t
 t/retry-after-year.t
 t/retry-contract.t
