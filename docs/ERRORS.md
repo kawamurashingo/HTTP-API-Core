@@ -28,6 +28,42 @@ destinations when requests contain credentials. An actual HTTP `599` with a
 different reason, or a response from a custom transport, continues through the
 normal HTTP error path.
 
+## Credential-conscious logging
+
+Errors retain useful diagnostic information, but the raw `message`, `url`,
+`request_id`, headers, and body may contain sensitive data. The stringified
+exception (e.g. `warn "$error"`) is intended for protected debugging, not
+necessarily for routine application logs.
+
+Use `log_summary` when a concise summary is enough:
+
+```perl
+eval { $api->get('/private') };
+if (my $error = $@) {
+    if (ref($error) && eval { $error->isa('HTTP::API::Core::Error') }) {
+        warn $error->log_summary, "\n";
+    }
+    else {
+        warn "API operation failed\n";
+    }
+}
+```
+
+`log_summary` emits a single line containing an allowlisted error category,
+HTTP method, optional validated HTTP status, and retryability. It does not
+include raw request URLs, exception messages, request IDs, response headers,
+or bodies. Unknown category or method values are replaced with fixed labels.
+For example:
+
+```text
+HTTP API error category=transport method=GET retryable=1
+HTTP API error category=http method=POST status=422 retryable=0
+```
+
+Do not append `$error->url`, `$error->message`, or request/response context
+to unprotected log messages; those accessors intentionally preserve full
+details for applications that need them.
+
 ## HTTP errors
 
 HTTP errors retain the associated response:
