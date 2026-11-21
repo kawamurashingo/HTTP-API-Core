@@ -1,6 +1,6 @@
 Revision history for HTTP-API-Core
 
-Unreleased
+1.13  2026-11-21
     - Reject non-ASCII digit characters in client timeout, retry options,
       pagination page sizes/indexes, and URL ports before numeric coercion;
       preserve ordinary ASCII numeric configuration without warnings.
