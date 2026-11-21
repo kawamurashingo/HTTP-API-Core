@@ -1,6 +1,6 @@
 Revision history for HTTP-API-Core
 
-Unreleased
+1.12  2026-11-21
     - Add generic offset pagination with configurable start/size parameters
       and total-based completion, advancing by the actual returned item count
       to support APIs that cap their page sizes.
