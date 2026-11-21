@@ -34,7 +34,7 @@ Use `HTTP::API::Core` when you are building a REST API client, JSON API client, 
 * structured errors
 * safe retries and `Retry-After`
 * rate-limit handling
-* next-URL, page-number, and cursor pagination
+* next-URL, page-number, cursor, and offset pagination
 * authentication hooks
 * request IDs and timing
 * idempotency keys
@@ -189,7 +189,7 @@ See [docs/AUTHENTICATION.md](docs/AUTHENTICATION.md).
 
 ### Pagination
 
-Next-URL, page-number, and cursor pagination share one iterator interface:
+Next-URL, page-number, cursor, and offset pagination share one iterator interface:
 
 ```perl
 my $pager = $api->paginate(
