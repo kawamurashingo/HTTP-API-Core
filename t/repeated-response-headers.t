@@ -120,7 +120,7 @@ ok !defined($error->rate_limit->remaining),
 is_deeply $error->headers->{'set-cookie'}, ['a=1', 'b=2'],
     'error exposes full repeated header values through response';
 
-for my $bad ( [{}], ['good', []], {}, \'' ) {
+for my $bad ( [{}], ['good', []], {} ) {
     my $bad_api = HTTP::API::Core->new(
         base_url => 'https://api.example.test',
         retry => { attempts => 1 },
@@ -133,6 +133,24 @@ for my $bad ( [{}], ['good', []], {}, \'' ) {
     isa_ok $caught, 'HTTP::API::Core::Error';
     is $caught->category, 'transport',
         'invalid nested response header uses structured transport error';
+}
+
+# Exercise the built-in HTTP::Tiny path without a network connection.
+{
+    no warnings 'redefine';
+    local *HTTP::Tiny::request = sub {
+        return {
+            status => 200,
+            headers => { 'set-cookie' => ['one=1', 'two=2'] },
+            content => '{}',
+        };
+    };
+    my $default_api = HTTP::API::Core->new(
+        base_url => 'https://api.example.test',
+    );
+    is_deeply $default_api->get('/default')->headers->{'set-cookie'},
+        ['one=1', 'two=2'],
+        'default HTTP::Tiny transport preserves repeated response headers';
 }
 
 done_testing;
