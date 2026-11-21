@@ -244,6 +244,9 @@ Application code can inspect structured fields such as:
 
 instead of parsing human-readable error messages.
 
+For routine logs, `$error->log_summary` provides a bounded summary without
+URLs, exception messages, request IDs, headers, or response bodies.
+
 See `docs/ERRORS.md`.
 
 ## Retry policy
