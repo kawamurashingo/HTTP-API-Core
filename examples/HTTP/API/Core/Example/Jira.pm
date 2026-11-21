@@ -45,7 +45,7 @@ sub issues_pager {
     die "unknown issues_pager option: $_\n" for sort keys %args;
 
     return $self->paginate(
-        '/jira/rest/api/2/search',
+        '/rest/api/2/search',
         mode            => 'offset',
         items           => 'issues',
         total           => 'total',
