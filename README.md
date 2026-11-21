@@ -127,6 +127,7 @@ Tested examples show how the same core maps onto APIs with different conventions
 * `HTTP::API::Core::Example::GitHub` — page-number pagination over a top-level JSON array, plus GitHub rate-limit metadata
 * `HTTP::API::Core::Example::Slack` — cursor pagination using `response_metadata.next_cursor`
 * `HTTP::API::Core::Example::Cloudflare` — page-number pagination using `result_info.total_pages`
+* `HTTP::API::Core::Example::Jira` — offset pagination and HTTP Basic authentication for Jira Server / Data Center search
 
 See [docs/REAL_API_EXAMPLES.md](docs/REAL_API_EXAMPLES.md).
 
