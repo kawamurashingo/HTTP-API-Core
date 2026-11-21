@@ -1,6 +1,10 @@
 Revision history for HTTP-API-Core
 
 Unreleased
+    - Accept HTTP::Tiny-style array-valued repeated response headers, preserving
+      all Set-Cookie values and defensive copies without transport workarounds.
+    - Keep header($name), retry, and rate-limit metadata scalar and conservative
+      when repeated header values conflict; reject malformed nested references.
     - Require ASCII digits in HTTP statuses, Retry-After delays, and rate-limit
       quota values to avoid Unicode numeric coercion and unintended retries.
     - Reject Retry-After HTTP-dates whose year changes during Time::Local
