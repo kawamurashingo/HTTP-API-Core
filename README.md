@@ -233,7 +233,7 @@ Failures use `HTTP::API::Core::Error` with machine-readable categories:
 * `http`
 * `hook`
 
-Application code can inspect fields such as `category`, `status`, `retryable`, and `request_id` instead of parsing human-readable messages.
+Application code can inspect fields such as `category`, `status`, `retryable`, and `request_id` instead of parsing human-readable messages. For routine logs, `$error->log_summary` avoids emitting raw URLs, diagnostics, headers, or bodies that may contain credentials.
 
 See [docs/ERRORS.md](docs/ERRORS.md).
 

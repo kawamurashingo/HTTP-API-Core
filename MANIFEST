@@ -46,6 +46,7 @@ t/client.t
 t/conflicting-response-headers.t
 t/contracts.t
 t/error-model.t
+t/error-log-summary.t
 t/false-valued-error-subclass.t
 t/http-tiny-internal-exception.t
 t/form.t
