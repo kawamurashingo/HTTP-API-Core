@@ -1,5 +1,10 @@
 Revision history for HTTP-API-Core
 
+Unreleased
+    - Add generic offset pagination with configurable start/size parameters
+      and total-based completion, advancing by the actual returned item count
+      to support APIs that cap their page sizes.
+
 1.11  2026-11-21
     - Accept HTTP::Tiny-style array-valued repeated response headers, preserving
       all Set-Cookie values and defensive copies without transport workarounds.
