@@ -1,6 +1,6 @@
 Revision history for HTTP-API-Core
 
-Unreleased
+1.13  2026-11-21
     - Classify HTTP::Tiny's synthetic 599 Internal Exception responses as
       transport errors, preserving retry policy while distinguishing them
       from real server HTTP errors and custom transport responses.
