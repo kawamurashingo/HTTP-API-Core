@@ -69,12 +69,12 @@ my $secret = 'secret-credential-abc123';
 
 {
     my $api = HTTP::API::Core->new(
-        base_url => "https://api.example.test?secret=$secret",
+        base_url => 'https://api.example.test',
         retry => { attempts => 1 },
         transport => sub { die "TLS exception: $secret\n" },
     );
     my $error;
-    eval { $api->get('/users'); 1 } or $error = $@;
+    eval { $api->get("/users?token=$secret"); 1 } or $error = $@;
     isa_ok $error, 'HTTP::API::Core::Error';
     is $error->category, 'transport',
         'real transport exceptions keep the original error category';
