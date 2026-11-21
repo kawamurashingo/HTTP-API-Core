@@ -753,7 +753,7 @@ Convenience methods around C<request>.
 =head2 paginate
 
 Returns an L<HTTP::API::Core::Pagination> iterator. Supported modes are
-C<next_url>, C<page>, and C<cursor>.
+C<next_url>, C<page>, C<cursor>, and C<offset>.
 
 =head2 request
 
