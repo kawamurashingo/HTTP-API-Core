@@ -88,7 +88,7 @@ my $pager = $api->paginate(
     page_size_param => 'maxResults',
     page_size       => 1000,
     query => {
-        jql    => 'filter=415607',
+        jql    => 'filter=12345',
         fields => 'summary,description,components',
     },
 );
