@@ -77,7 +77,8 @@ sub new {
     die "start_page must be a positive integer\n"
         if ref($self->{current_page}) ne '' || $self->{current_page} !~ /\A\d+\z/ || $self->{current_page} < 1;
     die "start_offset must be a non-negative integer\n"
-        if ref($self->{current_offset}) ne ''
+        if !defined($self->{current_offset})
+        || ref($self->{current_offset}) ne ''
         || $self->{current_offset} !~ /\A[0-9]+\z/;
     die "unknown pagination option: $_\n" for sort keys %args;
 
