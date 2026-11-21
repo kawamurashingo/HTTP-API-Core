@@ -1,6 +1,9 @@
 Revision history for HTTP-API-Core
 
 Unreleased
+    - Reject non-ASCII digit characters in client timeout, retry options,
+      pagination page sizes/indexes, and URL ports before numeric coercion;
+      preserve ordinary ASCII numeric configuration without warnings.
     - Add a bounded Error->log_summary accessor for routine logging without
       exposing raw URLs, diagnostic messages, request IDs, or response data.
     - Classify HTTP::Tiny's synthetic 599 Internal Exception responses as
