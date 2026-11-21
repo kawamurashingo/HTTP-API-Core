@@ -1,5 +1,11 @@
 Revision history for HTTP-API-Core
 
+1.14  2026-11-22
+    - Make offline tests independent of inherited HTTP proxy environment
+      variables, preventing malformed proxy URLs from breaking test setup.
+    - Verify the complete test suite with deliberately invalid proxy settings
+      in CI without changing production HTTP transport behavior.
+
 1.13  2026-11-21
     - Reject non-ASCII digit characters in client timeout, retry options,
       pagination page sizes/indexes, and URL ports before numeric coercion;
