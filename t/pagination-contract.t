@@ -337,4 +337,64 @@ dies_like(
     'reference-valued cursor continuation rejected',
 );
 
+
+# Continuation values are server-controlled. Tokens must not be echoed in
+# ordinary exception messages when a loop or cross-origin URL is rejected.
+my $secret_continuation = 'opaque-secret-123abc';
+
+{
+    my $url = "/private?token=$secret_continuation";
+    my $secret_client = T::PagerClient->new({
+        $url => { items => [1], next => $url },
+    });
+    my $pager = HTTP::API::Core::Pagination->new(
+        client => $secret_client, path => $url,
+    );
+    my $error;
+    eval { $pager->next; 1 } or $error = $@;
+    like $error, qr/pagination continuation repeated: url/,
+        'URL loop identifies the repeated continuation type';
+    unlike $error, qr/\Q$secret_continuation\E/,
+        'URL loop error does not include the query token';
+    is scalar(@{ $secret_client->{calls} }), 1,
+        'repeated sensitive URL is never fetched a second time';
+}
+
+{
+    my $url = "/cursor?cursor=$secret_continuation";
+    my $secret_client = T::PagerClient->new({
+        $url => { items => [1], next_cursor => $secret_continuation },
+    });
+    my $pager = HTTP::API::Core::Pagination->new(
+        client => $secret_client, path => '/cursor',
+        mode => 'cursor', cursor => $secret_continuation,
+    );
+    my $error;
+    eval { $pager->next; 1 } or $error = $@;
+    like $error, qr/pagination continuation repeated: cursor/,
+        'cursor loop identifies the repeated continuation type';
+    unlike $error, qr/\Q$secret_continuation\E/,
+        'cursor loop error does not include the opaque cursor';
+    is scalar(@{ $secret_client->{calls} }), 1,
+        'repeated sensitive cursor is never fetched a second time';
+}
+
+{
+    my $next = "https://evil.example/items?token=$secret_continuation";
+    my $secret_client = T::PagerClient->new({
+        '/origin' => { items => [1], next => $next },
+    });
+    my $pager = HTTP::API::Core::Pagination->new(
+        client => $secret_client, path => '/origin',
+    );
+    my $error;
+    eval { $pager->next; 1 } or $error = $@;
+    like $error, qr/cross-origin pagination continuation rejected/,
+        'cross-origin rejection remains explicit';
+    unlike $error, qr/\Q$secret_continuation\E/,
+        'cross-origin error does not include the rejected URL token';
+    is scalar(@{ $secret_client->{calls} }), 1,
+        'rejected sensitive URL is never requested';
+}
+
 done_testing;
