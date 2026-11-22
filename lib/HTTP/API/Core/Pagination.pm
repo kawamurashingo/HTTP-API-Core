@@ -249,14 +249,20 @@ sub _guard_next_url_origin {
         $base_authority =~ s/:$default_port\z//;
         $next_authority =~ s/:$default_port\z//;
     }
-    die "cross-origin pagination continuation rejected: $next\n"
+    # The server-controlled continuation may contain credentials.
+    die "cross-origin pagination continuation rejected\n"
         if $base_scheme ne $next_scheme || $base_authority ne $next_authority;
 }
 
 sub _guard_continuation {
     my ($self, $key, $seen) = @_;
     $seen = $self->{seen} if !defined $seen;
-    die "pagination continuation repeated: $key\n" if $seen->{$key}++;
+    if ($seen->{$key}++) {
+        # Keep the error useful without echoing a token or URL from an API.
+        my ($type) = $key =~ /\A(url|cursor):/;
+        $type = 'unknown' if !defined $type;
+        die "pagination continuation repeated: $type\n";
+    }
 }
 
 sub _extract {
