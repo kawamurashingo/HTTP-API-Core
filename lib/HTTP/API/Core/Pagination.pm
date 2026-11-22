@@ -235,11 +235,20 @@ sub _guard_next_url_origin {
     return if $next !~ m{\Ahttps?://}i;
 
     my $base = $self->{client}->base_url;
-    return if !defined($base) || $base !~ m{\A(https?)://([^/]+)}i;
+    return if !defined($base) || $base !~ m{\A(https?)://([^/?#]+)}i;
     my ($base_scheme, $base_authority) = (lc($1), lc($2));
 
-    $next =~ m{\A(https?)://([^/]+)}i;
+    die "invalid pagination continuation URL\n"
+        if $next !~ m{\A(https?)://([^/?#]+)}i;
     my ($next_scheme, $next_authority) = (lc($1), lc($2));
+
+    # The default port and an omitted port represent the same origin.
+    # Keep the comparison conservative for all other ports and authorities.
+    if ($base_scheme eq $next_scheme) {
+        my $default_port = $base_scheme eq 'https' ? 443 : 80;
+        $base_authority =~ s/:$default_port\z//;
+        $next_authority =~ s/:$default_port\z//;
+    }
     die "cross-origin pagination continuation rejected: $next\n"
         if $base_scheme ne $next_scheme || $base_authority ne $next_authority;
 }
