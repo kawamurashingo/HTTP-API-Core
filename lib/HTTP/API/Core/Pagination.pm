@@ -87,19 +87,27 @@ sub new {
 
 sub next {
     my ($self) = @_;
+    my ($has_item, $item) = $self->_take_item;
+    return $item;
+}
+
+# Keep item availability separate from item value: a decoded JSON null
+# is undef, but it is still a real item in the page.
+sub _take_item {
+    my ($self) = @_;
     while (!@{ $self->{buffer} }) {
-        return undef if $self->{finished};
+        return (0, undef) if $self->{finished};
         $self->_fetch_page;
     }
-    return shift @{ $self->{buffer} };
+    return (1, shift @{ $self->{buffer} });
 }
 
 sub all {
     my ($self) = @_;
     my @items;
     while (1) {
-        my $item = $self->next;
-        last if !defined $item;
+        my ($has_item, $item) = $self->_take_item;
+        last if !$has_item;
         push @items, $item;
     }
     return wantarray ? @items : \@items;
