@@ -52,6 +52,8 @@ Absolute continuation URLs are restricted to the client's configured origin by d
 
 Origin comparisons use the scheme and host, treating an omitted port as equivalent to the scheme's default port (`80` for HTTP, `443` for HTTPS). Query strings and fragments do not affect the origin, including absolute continuations without a path such as `https://api.example.com?page=2`. Different schemes, hosts, and non-default ports remain restricted.
 
+For safety, cross-origin rejection errors do not echo the rejected continuation URL: its query string may contain credentials or other private data. Treat continuation URLs received from APIs as untrusted input.
+
 ### `page`
 
 Page-number mode adds a page parameter to each request.
@@ -181,7 +183,7 @@ A page is accepted only after its items and continuation metadata are both valid
 
 Repeated next URLs or cursor values are rejected instead of looping forever. This includes a continuation that returns to the initial requested URL (including pagination query options) or to an explicitly supplied initial cursor; the duplicate request is avoided. Detection compares the URL and cursor values directly, without URL canonicalization.
 
-A repeated continuation throws an error containing `pagination continuation repeated`.
+A repeated continuation throws an error containing `pagination continuation repeated` and identifies whether the repeated value was a URL or cursor. The exception deliberately does **not** include the original URL or cursor value, because server-supplied continuation metadata can contain secrets.
 
 ## Validation
 
