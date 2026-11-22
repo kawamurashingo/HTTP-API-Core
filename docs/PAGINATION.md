@@ -46,7 +46,7 @@ my $pager = $api->paginate(
 );
 ```
 
-After the first page, continuation URLs are requested as returned by the API. Relative continuation URLs continue to pass through the client request layer and therefore use the configured base URL.
+After the first page, continuation URLs are requested as returned by the API. Absolute HTTP(S) continuation URLs are recognized even when the scheme uses uppercase or mixed-case letters (for example, `HTTPS://api.example.com/users?page=2`). Relative continuation URLs continue to pass through the client request layer and therefore use the configured base URL.
 
 An undefined or empty continuation marks the pagination sequence complete.
 
