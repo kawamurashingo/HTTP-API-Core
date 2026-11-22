@@ -52,7 +52,7 @@ An undefined or empty continuation marks the pagination sequence complete.
 
 Absolute continuation URLs are restricted to the client's configured origin by default. This prevents client-level credentials and other default headers from being forwarded to an unrelated origin when a continuation URL comes from a response. Set `allow_cross_origin => 1` only when the API intentionally paginates across origins and forwarding the client's request configuration is expected.
 
-Origin comparisons use the scheme and host, treating an omitted port as equivalent to the scheme's default port (`80` for HTTP, `443` for HTTPS). Query strings and fragments do not affect the origin, including absolute continuations without a path such as `https://api.example.com?page=2`. Different schemes, hosts, and non-default ports remain restricted.
+Origin comparisons use the scheme and host, treating an omitted port as equivalent to the scheme's default port (`80` for HTTP, `443` for HTTPS), including zero-padded spellings such as `:080` and `:0443`. Query strings and fragments do not affect the origin, including absolute continuations without a path such as `https://api.example.com?page=2`. Different schemes, hosts, and non-default ports remain restricted.
 
 For safety, cross-origin rejection errors do not echo the rejected continuation URL: its query string may contain credentials or other private data. Treat continuation URLs received from APIs as untrusted input.
 
