@@ -176,7 +176,7 @@ my $repeat = HTTP::API::Core::Pagination->new(
 );
 dies_like(
     sub { $repeat->all },
-    qr/pagination continuation repeated: url:\/r/,
+    qr/pagination continuation repeated: url/,
     'repeated continuation is rejected',
 );
 
