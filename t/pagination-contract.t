@@ -12,7 +12,7 @@ use HTTP::API::Core::Pagination;
 {
     package T::PagerClient;
     sub new { bless { calls => [], pages => $_[1] || {} }, $_[0] }
-    sub base_url { 'https://api.example.com' }
+    sub base_url { defined($_[0]->{base_url}) ? $_[0]->{base_url} : 'https://api.example.com' }
     sub get {
         my ($self, $url, %opts) = @_;
         push @{ $self->{calls} }, [$url, { %opts }];
@@ -205,6 +205,61 @@ my $same_origin = HTTP::API::Core::Pagination->new(
 );
 is_deeply(scalar($same_origin->all), [1, 2],
     'same-origin absolute continuation is allowed');
+
+# Query-only and fragment-only absolute URLs still have the same host.
+# Explicit default ports are equivalent to omitted ports in either direction.
+for my $case (
+    [ 'https://api.example.com', 'https://api.example.com?page=2',
+      'query-only absolute continuation remains same-origin' ],
+    [ 'https://api.example.com', 'https://api.example.com#next',
+      'fragment-only absolute continuation remains same-origin' ],
+    [ 'https://api.example.com', 'https://api.example.com:443/items?page=2',
+      'explicit HTTPS default port is same-origin' ],
+    [ 'https://api.example.com:443', 'https://api.example.com/items?page=2',
+      'omitted HTTPS default port is same-origin' ],
+    [ 'http://api.example.com', 'http://api.example.com:80/items?page=2',
+      'explicit HTTP default port is same-origin' ],
+    [ 'http://api.example.com:80', 'http://api.example.com/items?page=2',
+      'omitted HTTP default port is same-origin' ],
+) {
+    my ($base, $next, $label) = @$case;
+    my $origin_client = T::PagerClient->new({
+        '/start' => { items => [1], next => $next },
+        $next => { items => [2], next => undef },
+    });
+    $origin_client->{base_url} = $base;
+    my $pager = HTTP::API::Core::Pagination->new(
+        client => $origin_client, path => '/start',
+    );
+    is_deeply(scalar($pager->all), [1, 2], $label);
+}
+
+# A default-port match must not permit a different host, non-default
+# port, or scheme to receive the client's authenticated requests.
+for my $case (
+    [ 'https://api.example.com', 'https://api.example.com:444/items',
+      'non-default port remains cross-origin' ],
+    [ 'https://api.example.com', 'http://api.example.com:80/items',
+      'scheme change remains cross-origin' ],
+    [ 'https://api.example.com', 'https://api.example.com:443@evil.example/items',
+      'userinfo does not disguise a different host' ],
+) {
+    my ($base, $next, $label) = @$case;
+    my $origin_client = T::PagerClient->new({
+        '/start' => { items => [1], next => $next },
+    });
+    $origin_client->{base_url} = $base;
+    my $pager = HTTP::API::Core::Pagination->new(
+        client => $origin_client, path => '/start',
+    );
+    dies_like(
+        sub { $pager->all },
+        qr/cross-origin pagination continuation rejected/,
+        $label,
+    );
+    is scalar(@{ $origin_client->{calls} }), 1,
+        "$label: no request to rejected continuation";
+}
 
 my $allowed_cross_origin_client = T::PagerClient->new({
     '/allowed' => { items => [1], next => 'https://cdn.example/items?page=2' },
