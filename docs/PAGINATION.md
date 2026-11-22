@@ -20,6 +20,8 @@ my $all = $pager->all;
 
 In list context, `all()` returns the items as a list. In scalar context, it returns an array reference.
 
+`all()` preserves JSON `null` elements (decoded as Perl `undef`) within item arrays, including at page boundaries. `next()` retains its existing contract of returning `undef` at exhaustion; it therefore cannot distinguish an actual `undef` item from the end of iteration. Use `all()` when preserving nullable elements matters, or normalize them to explicit values in a custom `items` extractor before using `next()`.
+
 ## Supported modes
 
 Four modes are supported:
