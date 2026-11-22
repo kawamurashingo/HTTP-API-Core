@@ -250,12 +250,12 @@ sub _guard_next_url_origin {
         if $next !~ m{\A(https?)://([^/?#]+)}i;
     my ($next_scheme, $next_authority) = (lc($1), lc($2));
 
-    # The default port and an omitted port represent the same origin.
-    # Keep the comparison conservative for all other ports and authorities.
+    # Explicit default ports (including leading zeros) and omitted ports
+    # represent the same origin. Keep other authority forms conservative.
     if ($base_scheme eq $next_scheme) {
         my $default_port = $base_scheme eq 'https' ? 443 : 80;
-        $base_authority =~ s/:$default_port\z//;
-        $next_authority =~ s/:$default_port\z//;
+        $base_authority =~ s/:0*$default_port\z//;
+        $next_authority =~ s/:0*$default_port\z//;
     }
     # The server-controlled continuation may contain credentials.
     die "cross-origin pagination continuation rejected\n"

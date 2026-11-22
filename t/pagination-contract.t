@@ -221,6 +221,16 @@ for my $case (
       'explicit HTTP default port is same-origin' ],
     [ 'http://api.example.com:80', 'http://api.example.com/items?page=2',
       'omitted HTTP default port is same-origin' ],
+    [ 'https://api.example.com', 'https://api.example.com:0443/items?page=2',
+      'zero-padded HTTPS default port is same-origin' ],
+    [ 'https://api.example.com:000443', 'https://api.example.com/items?page=2',
+      'zero-padded HTTPS port on base is same-origin' ],
+    [ 'https://api.example.com:0443', 'https://api.example.com:000443/items?page=2',
+      'equivalent padded HTTPS default ports are same-origin' ],
+    [ 'http://api.example.com', 'http://api.example.com:080/items?page=2',
+      'zero-padded HTTP default port is same-origin' ],
+    [ 'http://api.example.com:00080', 'http://api.example.com/items?page=2',
+      'zero-padded HTTP port on base is same-origin' ],
 ) {
     my ($base, $next, $label) = @$case;
     my $origin_client = T::PagerClient->new({
@@ -239,6 +249,12 @@ for my $case (
 for my $case (
     [ 'https://api.example.com', 'https://api.example.com:444/items',
       'non-default port remains cross-origin' ],
+    [ 'https://api.example.com', 'https://api.example.com:0444/items',
+      'zero-padded non-default HTTPS port remains cross-origin' ],
+    [ 'http://api.example.com', 'http://api.example.com:0800/items',
+      'zero-padded non-default HTTP port remains cross-origin' ],
+    [ 'https://api.example.com', 'https://evil.example:0443/items',
+      'zero-padded default port does not allow a different host' ],
     [ 'https://api.example.com', 'http://api.example.com:80/items',
       'scheme change remains cross-origin' ],
     [ 'https://api.example.com', 'https://api.example.com:443@evil.example/items',
