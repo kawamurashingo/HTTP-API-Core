@@ -22,6 +22,34 @@ In list context, `all()` returns the items as a list. In scalar context, it retu
 
 `all()` preserves JSON `null` elements (decoded as Perl `undef`) within item arrays, including at page boundaries. `next()` retains its existing contract of returning `undef` at exhaustion; it therefore cannot distinguish an actual `undef` item from the end of iteration. Use `all()` when preserving nullable elements matters, or normalize them to explicit values in a custom `items` extractor before using `next()`.
 
+## Optional page limit
+
+Use `max_pages` to bound the number of successfully validated pages fetched by
+any pagination mode. The default is unlimited, preserving existing behavior.
+
+```perl
+my $pager = $api->paginate(
+    '/users',
+    mode      => 'page',
+    has_more  => 'has_more',
+    max_pages => 50,
+);
+```
+
+If more pages remain after the limit is reached, the next attempt to fetch a
+page throws `pagination maximum page count exceeded` **before** issuing
+another HTTP request. Items already buffered by the last permitted page can
+still be consumed with `next()`. A pagination sequence that finishes on the
+last permitted page completes normally.
+
+Failed pages do not count against this limit: the iterator can retry a page
+whose response or continuation metadata was rejected without exhausting its
+page allowance. In page-number mode, an empty page with `has_more` true
+can legitimately precede a populated page; without `max_pages` the iterator
+still honors that flag. Set a limit when the API could repeatedly claim more
+pages without returning useful data.
+
+
 ## Supported modes
 
 Four modes are supported:
@@ -197,6 +225,7 @@ The constructor rejects:
 - non-hash `query`
 - non-hash `request`
 - non-positive `page_size`
+- non-positive, non-integer, or non-ASCII `max_pages`
 - non-positive `start_page`
 - non-ASCII digits in `page_size` or `start_page`
 - invalid or negative `start_offset`

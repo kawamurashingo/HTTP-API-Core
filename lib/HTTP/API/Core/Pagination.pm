@@ -45,6 +45,7 @@ sub new {
         page_param      => exists($args{page_param}) ? delete($args{page_param}) : 'page',
         page_size_param => exists($args{page_size_param}) ? delete($args{page_size_param}) : 'per_page',
         page_size       => delete($args{page_size}),
+        max_pages       => delete($args{max_pages}),
         current_page    => exists($args{start_page}) ? delete($args{start_page}) : 1,
         offset_param    => exists($args{offset_param}) ? delete($args{offset_param}) : 'offset',
         current_offset  => exists($args{start_offset}) ? delete($args{start_offset}) : 0,
@@ -55,6 +56,7 @@ sub new {
         buffer          => [],
         finished        => 0,
         started         => 0,
+        pages_fetched   => 0,
         seen            => {},
     }, $class;
 
@@ -74,6 +76,11 @@ sub new {
     die "request must be a hash reference\n" if ref($self->{request}) ne 'HASH';
     die "page_size must be a positive integer\n"
         if defined($self->{page_size}) && (ref($self->{page_size}) ne '' || $self->{page_size} !~ /\A[0-9]+\z/ || $self->{page_size} < 1);
+    die "max_pages must be a positive integer\n"
+        if defined($self->{max_pages})
+        && (ref($self->{max_pages}) ne ''
+            || $self->{max_pages} !~ /\A[0-9]+\z/
+            || $self->{max_pages} < 1);
     die "start_page must be a positive integer\n"
         if ref($self->{current_page}) ne '' || $self->{current_page} !~ /\A[0-9]+\z/ || $self->{current_page} < 1;
     die "start_offset must be a non-negative integer\n"
@@ -115,6 +122,11 @@ sub all {
 
 sub _fetch_page {
     my ($self) = @_;
+    # A page limit guards against a server that keeps reporting more pages,
+    # including empty pages with has_more set. Do not send another request.
+    die "pagination maximum page count exceeded\n"
+        if defined($self->{max_pages})
+        && $self->{pages_fetched} >= $self->{max_pages};
     my $url = $self->_request_url;
     my $first_page = !$self->{started};
     my $response = $self->{client}->get($url, %{ $self->{request} });
@@ -125,7 +137,11 @@ sub _fetch_page {
 
     # Stage iterator updates until the continuation is fully validated.
     # A failed page must not leave items in the buffer or advance the cursor.
-    my %update = (buffer => [ @$items ], started => 1);
+    my %update = (
+        buffer => [ @$items ],
+        started => 1,
+        pages_fetched => $self->{pages_fetched} + 1,
+    );
     my %seen = %{ $self->{seen} };
 
     # Continuations must not revisit the initial page or a supplied cursor.
