@@ -1,0 +1,58 @@
+name: coverage
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Perl
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: '5.40.2'
+
+      - name: Install test and coverage dependencies
+        run: cpanm --notest HTTP::Tiny JSON::PP MIME::Base64 Scalar::Util Time::HiRes Test::More Devel::Cover@1.52 Pod::Coverage
+
+      - name: Record measurement environment
+        run: |
+          mkdir -p coverage-reports
+          perl -V > coverage-reports/environment.txt
+          # Read versions without loading Devel::Cover or activating instrumentation.
+          perl -MModule::Metadata -e 'for my $m (qw(Devel::Cover Pod::Coverage HTTP::Tiny JSON::PP MIME::Base64 Scalar::Util Time::HiRes Test::More)) { my $meta = Module::Metadata->new_from_module($m) or die "Missing $m\n"; print "$m ", $meta->version, "\n" }' >> coverage-reports/environment.txt
+
+      - name: Configure
+        run: perl Makefile.PL
+
+      - name: Run offline tests with coverage
+        run: |
+          set -o pipefail
+          cover -delete
+          HARNESS_PERL_SWITCHES=-MDevel::Cover make test 2>&1 | tee coverage-reports/tests.txt
+
+      - name: Generate coverage reports
+        run: |
+          set -o pipefail
+          cover -report html
+          cover -report text | tee coverage-reports/all.txt
+          cover -report text -select_re '(^|/)(blib/)?lib/HTTP/API/Core(/|\.pm$)' | tee coverage-reports/library.txt
+          cover -report text -select_re '(^|/)examples/' | tee coverage-reports/examples.txt
+
+      - name: Upload coverage artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-perl-5.40.2
+          path: |
+            coverage-reports/
+            cover_db/
+          if-no-files-found: warn
