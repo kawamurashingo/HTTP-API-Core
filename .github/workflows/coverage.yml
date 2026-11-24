@@ -27,7 +27,7 @@ jobs:
         run: |
           mkdir -p coverage-reports
           perl -V > coverage-reports/environment.txt
-          perl -MDevel::Cover -MPod::Coverage -MHTTP::Tiny -MJSON::PP -MTest::More -e 'for my $m (qw(Devel::Cover Pod::Coverage HTTP::Tiny JSON::PP Test::More)) { print "$m ", $m->VERSION, "\n" }' >> coverage-reports/environment.txt
+          perl -mDevel::Cover -MPod::Coverage -MHTTP::Tiny -MJSON::PP -MTest::More -e 'for my $m (qw(Devel::Cover Pod::Coverage HTTP::Tiny JSON::PP Test::More)) { print "$m ", $m->VERSION, "\n" }' >> coverage-reports/environment.txt
 
       - name: Configure
         run: perl Makefile.PL
@@ -35,6 +35,7 @@ jobs:
       - name: Run offline tests with coverage
         run: |
           set -o pipefail
+          cover -delete
           HARNESS_PERL_SWITCHES=-MDevel::Cover make test 2>&1 | tee coverage-reports/tests.txt
 
       - name: Generate coverage reports
