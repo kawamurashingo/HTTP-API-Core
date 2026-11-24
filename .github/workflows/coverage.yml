@@ -27,7 +27,8 @@ jobs:
         run: |
           mkdir -p coverage-reports
           perl -V > coverage-reports/environment.txt
-          perl -mDevel::Cover -MPod::Coverage -MHTTP::Tiny -MJSON::PP -MTest::More -e 'for my $m (qw(Devel::Cover Pod::Coverage HTTP::Tiny JSON::PP Test::More)) { print "$m ", $m->VERSION, "\n" }' >> coverage-reports/environment.txt
+          # Read versions without loading Devel::Cover or activating instrumentation.
+          perl -MModule::Metadata -e 'for my $m (qw(Devel::Cover Pod::Coverage HTTP::Tiny JSON::PP MIME::Base64 Scalar::Util Time::HiRes Test::More)) { my $meta = Module::Metadata->new_from_module($m) or die "Missing $m\n"; print "$m ", $meta->version, "\n" }' >> coverage-reports/environment.txt
 
       - name: Configure
         run: perl Makefile.PL
