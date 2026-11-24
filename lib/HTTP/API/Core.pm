@@ -770,6 +770,16 @@ report an exhausted rate limit.
 C<base_url> is required. C<headers>, C<timeout>, C<retry>, and C<hooks> are
 optional. Retry defaults to three attempts with exponential backoff and jitter.
 
+=head2 base_url, timeout
+
+Return the configured base URL (with trailing slashes removed) and timeout
+in seconds, respectively.
+
+=head2 retry, hooks
+
+Return copies of the client's normalized retry policy and hook collections.
+Changing the returned hash or its arrays does not change the client.
+
 =head2 get, post, put, patch, delete
 
 Convenience methods around C<request>.
