@@ -24,6 +24,8 @@ Keep using `HTTP::Tiny`, LWP, Mojo::UserAgent, Furl, or your preferred transport
 
 **You write the service-specific methods. HTTP::API::Core handles the plumbing.**
 
+One iterator covers four common pagination styles: next URL, page number, cursor, and offset/limit. Offset pagination supports configurable parameter names and advances by the number of items actually returned, so it can handle server-imposed page-size caps when the API exposes a total count.
+
 ## When should I use HTTP::API::Core?
 
 Use `HTTP::API::Core` when you are building a REST API client, JSON API client, or small SDK in Perl and do not want to reimplement the same plumbing for every service. It is especially useful when wrapping a third-party HTTP API or adding retries, exponential backoff, pagination, rate-limit handling, and authentication to an existing Perl API client:
@@ -116,6 +118,8 @@ Then production requirements arrive: encode parameters, decode JSON, normalize f
 
 **Building a Slack-like API client?** Use cursor pagination without writing the iteration loop yourself.
 
+**Building a Jira-like API client?** Use generic offset pagination with configurable offset and page-size parameters, actual-item-count advancement, and total-based completion.
+
 **Calling an unreliable API?** Configure conservative retries with exponential backoff, jitter, and `Retry-After` support.
 
 **Building an internal SDK?** Keep authentication, structured errors, logging/tracing hooks, and transport details out of your resource methods.
@@ -207,6 +211,35 @@ while (my $user = $pager->next) {
 ```
 
 Extractors may be dotted paths or coderefs. Repeated next URLs or cursors are rejected instead of looping forever.
+
+#### Generic offset pagination
+
+Offset/limit pagination is built in, not tied to a particular service. The same iterator supports APIs using `offset`/`limit`, `startAt`/`maxResults`, or other parameter names.
+
+For example, with an appropriately authenticated Jira Server / Data Center client:
+
+```perl
+my $pager = $api->paginate(
+    '/rest/api/2/search',
+    mode            => 'offset',
+    items           => 'issues',
+    total           => 'total',
+    offset_param    => 'startAt',
+    page_size_param => 'maxResults',
+    page_size       => 100,
+    query           => { jql => 'project = DEMO' },
+);
+
+my $issues = $pager->all;
+```
+
+The iterator advances the offset by the **actual number of items returned**, not the requested page size. If you request 100 items but the server caps each response at 30, the offsets advance as `0, 30, 60, 90, ...` rather than `0, 100, 200, ...`.
+
+With a `total` extractor, a short page does not prematurely end iteration, and the iterator stops when the next offset reaches the reported total (or an empty page is returned). Without a total, configure `has_more` when available; otherwise a short page can signal completion.
+
+This avoids skipped items caused by server-side page-size caps without requiring a service-specific pagination loop. As with any offset-based API, changes to the underlying result set during iteration may still affect consistency.
+
+See the [Jira integration example](examples/HTTP/API/Core/Example/Jira.pm) and [pagination reference](docs/REFERENCE.md) for more details.
 
 ### Retries and rate limits
 
